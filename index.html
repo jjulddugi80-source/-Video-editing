@@ -3,242 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pioneer B2B Agency Console</title>
+    <title>Pioneer Creator Order Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background-color: #f8fafc; color: #1e293b; font-family: 'Courier New', Courier, monospace; padding: 10px; }
-        .form-border { border: 3px solid #000; padding: 20px; background: #ffffff; position: relative; box-shadow: 8px 8px 0px rgba(0,0,0,0.1); }
-        .input-underline { border-bottom: 2px solid #000; width: 100%; padding: 10px 0; background: transparent; outline: none; font-weight: bold; }
-        .section-title { font-weight: 900; font-size: 14px; text-transform: uppercase; margin-bottom: 8px; border-left: 4px solid #000; padding-left: 8px; }
-        
-        /* 커스텀 드롭다운 화살표 */
-        .custom-select {
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+        }
+        .form-border {
+            border: 3px solid #000;
+            padding: 24px;
+            background: #ffffff;
+            position: relative;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        }
+        .form-border::after {
+            content: "OFFICIAL DOCUMENT";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 40px;
+            color: rgba(0,0,0,0.03);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .input-underline {
+            border-bottom: 2px solid #000;
+            width: 100%;
+            padding: 10px 0;
+            background: transparent;
+            outline: none;
+            font-weight: bold;
+        }
+        .section-title {
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid #000;
+            padding-left: 8px;
+        }
+        select {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            background: transparent url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat right center;
-            background-size: 20px;
-            padding-right: 25px; /* 글자와 화살표 겹침 방지 */
         }
-
-        /* 도매가 숨기기 모드 클래스 */
-        .price-hidden .wholesale-price { filter: blur(5px); user-select: none; pointer-events: none; opacity: 0.7; }
-        
-        /* 트랜지션 및 클릭 효과 */
-        .interactive-label { transition: all 0.2s ease; }
-        .interactive-label:active { transform: scale(0.98); }
     </style>
 </head>
-<body class="antialiased select-none sm:p-5">
-    <div id="appContainer" class="form-border transition-all duration-300 mx-auto max-w-lg">
-        
-        <!-- B2B 에이전시 툴바 -->
-        <div class="flex justify-between items-center mb-6 bg-gray-100 p-2 sm:p-3 border-2 border-black rounded-sm shadow-sm">
-            <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest flex items-center gap-1">
-                <span>⚡</span> B2B Console
-            </span>
-            <label class="flex items-center gap-1 sm:gap-2 cursor-pointer bg-white px-2 py-1 border border-gray-300 rounded shadow-sm interactive-label hover:bg-gray-50">
-                <input type="checkbox" id="safeModeToggle" onchange="toggleSafeMode()" class="w-3 h-3 accent-red-600">
-                <span class="text-[9px] sm:text-[10px] font-bold text-red-600 uppercase">Client Safe Mode</span>
-            </label>
-        </div>
+<body class="antialiased select-none">
 
-        <div class="text-center border-b-4 border-black pb-4 mb-6">
-            <h1 class="text-xl sm:text-2xl font-black tracking-tighter uppercase">[ AI VIDEO GEN ORDER ]</h1>
-            <p class="text-[9px] font-bold text-gray-500 mt-1">REF: PIONEER-B2B-EDITION</p>
+    <div class="form-border">
+        <!-- HEADER -->
+        <div class="text-center border-b-4 border-black pb-4 mb-8">
+            <h1 class="text-2xl font-black tracking-tighter uppercase">[ AI VIDEO GEN ORDER ]</h1>
+            <div class="flex justify-between items-center mt-2 px-1 text-[9px] font-bold text-gray-500">
+                <span>REF: PIONEER-EDITION-2026</span>
+                <span>TYPE: GOVERNANCE ASSET</span>
+            </div>
         </div>
 
         <div class="space-y-8">
+            <!-- 01. SOURCE STATUS -->
+            <section>
+                <h3 class="section-title">01. VIDEO SOURCE</h3>
+                <div class="p-3 bg-gray-100 border-2 border-black text-center">
+                    <p class="text-[10px] font-black italic">Please ensure your video is uploaded to the bot first.</p>
+                </div>
+            </section>
+
+            <!-- 02. SUBTITLE -->
+            <section>
+                <h3 class="section-title">02. SCREEN SUBTITLE</h3>
+                <input type="text" id="subtitle" class="input-underline text-sm uppercase" placeholder="Text to be burned on video (e.g. BREAKING NEWS)">
+            </section>
+
+            <!-- 03. [신규] CREATIVE PROMPT (편집 방향) -->
+            <section>
+                <h3 class="section-title text-indigo-700">03. EDITING DIRECTION (PROMPT)</h3>
+                <p class="text-[9px] font-bold text-gray-500 mb-2">원하는 영상의 분위기나 효과를 상세히 적어주세요.</p>
+                <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-2 border-black p-3 text-sm font-bold outline-none resize-none placeholder-gray-400" placeholder="예: 비바람이 몰아치는 흐린 날씨에 마사이족 전사의 창끝이 날카롭게 빛나게 하고, 비장한 분위기를 극대화해주세요."></textarea>
+            </section>
             
-            <!-- 01. 타겟 국가 & 성별 (번호 수정) -->
-            <section class="grid grid-cols-2 gap-4 sm:gap-6">
+            <!-- 04. METADATA -->
+            <section class="grid grid-cols-2 gap-6">
                 <div>
-                    <h3 class="section-title text-xs sm:text-sm">01. REGION</h3>
-                    <select id="country" class="input-underline custom-select text-xs sm:text-sm font-bold cursor-pointer hover:border-gray-500 transition-colors truncate">
-                        <option value="" disabled selected>Select Region...</option>
+                    <h3 class="section-title">04. REGION</h3>
+                    <select id="country" class="input-underline text-sm cursor-pointer font-bold">
+                        <option value="KR">South Korea (KR)</option>
+                        <option value="VN">Vietnam (VN)</option>
+                        <option value="US">United States (US)</option>
+                        <option value="ID">Indonesia (ID)</option>
+                        <option value="KE">Kenya (KE)</option>
                     </select>
                 </div>
                 <div>
-                    <h3 class="section-title text-xs sm:text-sm">02. GENDER</h3>
-                    <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-2">
-                        <label class="text-xs font-black cursor-pointer interactive-label flex items-center gap-1">
-                            <input type="radio" name="gender" value="male" checked class="accent-black w-3 h-3"> MALE
-                        </label>
-                        <label class="text-xs font-black cursor-pointer interactive-label flex items-center gap-1">
-                            <input type="radio" name="gender" value="female" class="accent-black w-3 h-3"> FEMALE
-                        </label>
+                    <h3 class="section-title">05. GENDER</h3>
+                    <div class="flex gap-6 mt-2">
+                        <label class="text-xs flex items-center gap-2 font-black cursor-pointer"><input type="radio" name="gender" value="male" checked class="w-4 h-4 accent-black"> MALE</label>
+                        <label class="text-xs flex items-center gap-2 font-black cursor-pointer"><input type="radio" name="gender" value="female" class="w-4 h-4 accent-black"> FEMALE</label>
                     </div>
                 </div>
             </section>
 
-            <!-- 03. 플랫폼 선택 (번호 수정) -->
+            <!-- 05. PLATFORM OPTIMIZATION -->
             <section>
-                <h3 class="section-title flex justify-between items-end">
-                    <span>03. TARGET PLATFORMS</span>
-                    <span class="text-[9px] text-indigo-600 normal-case">($0.06 each)</span>
-                </h3>
-                <p class="text-[9px] text-gray-600 font-bold mb-3">각 플랫폼에 맞는 비율과 알고리즘 노출을 최적화 합니다.</p>
-                <!-- 모바일에서 줄바꿈이 예쁘게 되도록 Grid 레이아웃 적용 -->
-                <div class="grid grid-cols-2 gap-2 text-[10px] sm:text-[11px] font-black mt-2">
-                    <label class="cursor-pointer interactive-label flex items-center gap-2 bg-gray-100 px-2 py-2 rounded border border-gray-300 hover:bg-gray-200">
-                        <input type="checkbox" name="platform" value="tiktok" checked onchange="calculateTotal()" class="accent-black w-3 h-3"> TIKTOK
+                <h3 class="section-title">06. TARGET PLATFORMS</h3>
+                <div class="flex flex-wrap gap-4 text-[11px] font-black">
+                    <label class="flex items-center gap-2 px-3 py-2 border-2 border-black hover:bg-gray-100 cursor-pointer">
+                        <input type="checkbox" name="platform" value="tiktok" checked class="accent-black"> TIKTOK
                     </label>
-                    <label class="cursor-pointer interactive-label flex items-center gap-2 bg-gray-100 px-2 py-2 rounded border border-gray-300 hover:bg-gray-200">
-                        <input type="checkbox" name="platform" value="reels" checked onchange="calculateTotal()" class="accent-black w-3 h-3"> REELS
+                    <label class="flex items-center gap-2 px-3 py-2 border-2 border-black hover:bg-gray-100 cursor-pointer">
+                        <input type="checkbox" name="platform" value="reels" class="accent-black"> REELS
                     </label>
-                    <label class="cursor-pointer interactive-label flex items-center gap-2 bg-gray-100 px-2 py-2 rounded border border-gray-300 hover:bg-gray-200">
-                        <input type="checkbox" name="platform" value="shorts" checked onchange="calculateTotal()" class="accent-black w-3 h-3"> SHORTS
-                    </label>
-                    <label class="cursor-pointer interactive-label flex items-center gap-2 bg-gray-100 px-2 py-2 rounded border border-gray-300 hover:bg-gray-200">
-                        <input type="checkbox" name="platform" value="snapchat" checked onchange="calculateTotal()" class="accent-black w-3 h-3"> SNAPCHAT
+                    <label class="flex items-center gap-2 px-3 py-2 border-2 border-black hover:bg-gray-100 cursor-pointer">
+                        <input type="checkbox" name="platform" value="shorts" class="accent-black"> SHORTS
                     </label>
                 </div>
             </section>
 
-            <!-- 04. 화이트라벨링 (번호 수정) -->
-            <section class="p-4 bg-gray-50 border-2 border-black">
-                <h3 class="text-[11px] sm:text-[12px] font-black mb-1 uppercase">04. YOUR COPYRIGHT CERTIFICATE</h3>
-                <p class="text-[8px] sm:text-[9px] text-gray-600 font-bold mb-4 leading-tight">자신의 브랜드 로고를 삽입하여 고객에게 더 큰 신뢰를 줍니다.</p>
-                
-                <div class="space-y-3 font-bold text-[9px] sm:text-[10px]">
-                    <!-- 긴 텍스트 줄바꿈 시 라디오 버튼이 상단에 예쁘게 고정되도록 items-start 추가 -->
-                    <label class="flex items-start gap-2 cursor-pointer interactive-label">
-                        <input type="radio" name="watermarkType" value="pi_default" checked onchange="toggleLogoUpload()" class="accent-black w-3 h-3 mt-0.5"> 
-                        <span class="leading-tight">Default "Pi"<br><span class="text-gray-500 font-normal text-[8px]">(The small, barely transparent "PI" in the corner)</span></span>
-                    </label>
-                    <label class="flex items-start gap-2 cursor-pointer interactive-label">
-                        <input type="radio" name="watermarkType" value="custom_agency" onchange="toggleLogoUpload()" class="accent-black w-3 h-3 mt-0.5"> 
-                        <span class="leading-tight">Upload Custom Agency Logo (PNG)</span>
-                    </label>
-                    
-                    <!-- 로고 업로드 영역 -->
-                    <div id="logoUploadSection" class="hidden pl-5 mt-2 transition-all">
-                        <label for="logoFile" class="block w-full border-2 border-dotted border-gray-400 p-3 text-center cursor-pointer hover:bg-white transition-colors bg-gray-100 interactive-label">
-                            <span id="logoNameDisplay" class="text-[10px] text-gray-500 font-bold break-all">Attach PNG Logo (+)</span>
-                            <input id="logoFile" type="file" class="hidden" accept="image/png" onchange="updateLogoStatus()"/>
-                        </label>
-                        <p class="text-[7px] text-gray-400 mt-1">* Transparent background recommended.</p>
-                    </div>
-                </div>
+            <!-- 06. COPYRIGHT -->
+            <section class="p-4 bg-black text-white">
+                <h3 class="text-[11px] font-black mb-1 uppercase tracking-tighter">07. COPYRIGHT PROTECTION</h3>
+                <label class="flex items-center gap-3 text-[9px] cursor-pointer font-bold leading-tight">
+                    <input type="checkbox" id="copyright" checked class="w-4 h-4 accent-white"> 
+                    Embed On-chain TxID to protect your copyright permanently via Pi Governance.
+                </label>
             </section>
         </div>
 
-        <!-- 최종 도매 단가 영역 -->
-        <div class="mt-10 pt-5 border-t-4 border-black">
-            <div class="flex flex-col mb-5">
-                <div class="flex justify-between items-end font-black text-[10px] sm:text-xs uppercase mb-1">
-                    <span>FACTORY WHOLESALE COST</span>
-                    <span class="text-indigo-600 text-xl sm:text-2xl leading-none wholesale-price transition-all duration-300">$<span id="totalPrice">0.44 ~ 0.84</span></span>
-                </div>
-                <span class="text-[8px] sm:text-[9px] text-gray-500 font-bold text-right wholesale-price transition-all duration-300">* Base fee varies by resource usage.</span>
+        <!-- TOTAL & SUBMIT -->
+        <div class="mt-12 pt-6 border-t-4 border-black">
+            <div class="flex justify-between font-black text-xs mb-6 uppercase tracking-widest">
+                <span>ESTIMATED TOTAL FEE</span>
+                <span class="text-indigo-600 text-lg">$1.06 (USD)</span>
             </div>
-            <button onclick="submitOrder()" class="w-full bg-black text-white font-black py-4 sm:py-5 text-xs sm:text-sm active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg transition-transform">
-                [ SUBMIT B2B ORDER ]
+            <button onclick="submitOrder()" class="w-full bg-black text-white font-black py-5 text-sm hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
+                [ SUBMIT & START AI FACTORY ]
             </button>
         </div>
     </div>
 
     <script>
-        // Telegram WebApp 초기화
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // 1. 도매가 숨기기 모드 (Client Safe Mode)
-        function toggleSafeMode() {
-            const isSafe = document.getElementById('safeModeToggle').checked;
-            const container = document.getElementById('appContainer');
-            if(isSafe) {
-                container.classList.add('price-hidden');
-            } else {
-                container.classList.remove('price-hidden');
-            }
-        }
-
-        // 2. 국가 데이터 (A-Z 정렬)
-        function populateCountries() {
-            const select = document.getElementById('country');
-            const rawCsvData = "AF,Afghanistan,+93|AL,Albania,+355|DZ,Algeria,+213|AR,Argentina,+54|AU,Australia,+61|AT,Austria,+43|BD,Bangladesh,+880|BR,Brazil,+55|KH,Cambodia,+855|CA,Canada,+1|CL,Chile,+56|CN,China,+86|CO,Colombia,+57|EG,Egypt,+20|FR,France,+33|DE,Germany,+49|GH,Ghana,+233|HK,Hong Kong,+852|IN,India,+91|ID,Indonesia,+62|IR,Iran,+98|IQ,Iraq,+964|IT,Italy,+39|JP,Japan,+81|KE,Kenya,+254|MY,Malaysia,+60|MX,Mexico,+52|MA,Morocco,+212|MM,Myanmar,+95|NP,Nepal,+977|NL,Netherlands,+31|NZ,New Zealand,+64|NG,Nigeria,+234|PK,Pakistan,+92|PH,Philippines,+63|RU,Russia,+7|SA,Saudi Arabia,+966|SG,Singapore,+65|ZA,South Africa,+27|KR,South Korea,+82|ES,Spain,+34|LK,Sri Lanka,+94|SE,Sweden,+46|CH,Switzerland,+41|TW,Taiwan,+886|TH,Thailand,+66|TR,Turkey,+90|AE,United Arab Emirates,+971|GB,United Kingdom,+44|US,United States,+1|VN,Vietnam,+84";
-            
-            rawCsvData.split('|').forEach(item => {
-                const [iso, name, dial] = item.split(',');
-                select.add(new Option(`${name} (${dial})`, iso));
-            });
-        }
-        window.onload = () => {
-            populateCountries();
-            calculateTotal(); // 최초 로드 시 가격 계산
-        };
-
-        function updateLogoStatus() {
-            const file = document.getElementById('logoFile').files[0];
-            if(file) {
-                document.getElementById('logoNameDisplay').innerHTML = `<span class="text-indigo-600">[LOGO READY]</span> ${file.name}`;
-            }
-        }
-
-        function toggleLogoUpload() {
-            const isCustom = document.querySelector('input[name="watermarkType"]:checked').value === 'custom_agency';
-            const uploadSection = document.getElementById('logoUploadSection');
-            if (isCustom) {
-                uploadSection.classList.remove('hidden');
-            } else {
-                uploadSection.classList.add('hidden');
-                document.getElementById('logoFile').value = ''; // 선택된 파일 초기화
-                document.getElementById('logoNameDisplay').innerText = 'Attach PNG Logo (+)';
-            }
-        }
-
-        // 4. 가격 계산
-        const BASE_PRICE_MIN = 0.20;
-        const BASE_PRICE_MAX = 0.60;
-        const PLATFORM_PRICE = 0.06;
-
-        function calculateTotal() {
-            const checkboxes = document.querySelectorAll('input[name="platform"]:checked');
-            const platformCost = checkboxes.length * PLATFORM_PRICE;
-            const minTotal = BASE_PRICE_MIN + platformCost;
-            const maxTotal = BASE_PRICE_MAX + platformCost;
-            document.getElementById('totalPrice').innerText = `${minTotal.toFixed(2)} ~ ${maxTotal.toFixed(2)}`;
-        }
-
-        // 5. 텔레그램으로 전송 및 유효성 검사 (Validation)
         function submitOrder() {
-            const countrySelect = document.getElementById('country');
-            const watermarkType = document.querySelector('input[name="watermarkType"]:checked').value;
-            const logoFile = document.getElementById('logoFile').files[0];
-
-            // 필수 입력값 검증 (업자들의 실수 방지)
-            if(!countrySelect.value) {
-                tg.showAlert("Please select a target region first."); // 텔레그램 네이티브 알림 사용
-                return;
-            }
-
-            if(watermarkType === 'custom_agency' && !logoFile) {
-                tg.showAlert("Please attach your custom agency logo (PNG).");
-                return;
-            }
-
             const btn = document.querySelector('button');
-            btn.innerText = "SENDING TO FACTORY... 🚀";
+            btn.innerText = "ENCRYPTING & SENDING... 🚀";
             btn.disabled = true;
 
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
-            const platformCost = platforms.length * PLATFORM_PRICE;
-            const finalUsd = `${(BASE_PRICE_MIN + platformCost).toFixed(2)}~${(BASE_PRICE_MAX + platformCost).toFixed(2)}`;
-
+            
+            // [신규] 유저의 프롬프트를 데이터 객체에 추가합니다.
             const data = {
-                action: "B2B_AGENCY_ORDER",
-                country: countrySelect.value, 
+                action: "PIONEER_ORDER",
+                subtitle: document.getElementById('subtitle').value,
+                prompt: document.getElementById('prompt').value, // <-- 새로 추가된 텍스트
+                country: document.getElementById('country').value,
                 gender: document.querySelector('input[name="gender"]:checked').value,
                 platforms: platforms,
-                watermark_type: watermarkType,
-                has_custom_logo: !!logoFile,
-                total_usd: finalUsd
+                copyright: document.getElementById('copyright').checked,
+                total_usd: "1.06",
+                timestamp: new Date().getTime()
             };
-            
+
             tg.sendData(JSON.stringify(data));
-            setTimeout(() => tg.close(), 600);
+            setTimeout(() => { tg.close(); }, 800);
         }
     </script>
 </body>
