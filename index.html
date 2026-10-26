@@ -18,7 +18,7 @@
             padding: 24px;
             background: #ffffff;
             position: relative;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.1);
         }
         .form-border::after {
             content: "OFFICIAL DOCUMENT";
@@ -27,7 +27,7 @@
             left: 50%;
             transform: translate(-50%, -50%) rotate(-30deg);
             font-size: 40px;
-            color: rgba(0,0,0,0.03);
+            color: rgba(0, 0, 0, 0.03);
             pointer-events: none;
             white-space: nowrap;
         }
@@ -102,7 +102,7 @@
                 <p class="text-[9px] font-bold text-gray-500 mb-2">Describe your desired editing style, mood, or specific effects in detail.</p>
                 <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-2 border-black p-3 text-sm font-bold outline-none resize-none placeholder-gray-400" placeholder="e.g., Cinematic lighting, epic mood, stormy background, make the spear tip shine sharply."></textarea>
             </section>
-            
+
             <!-- 05. METADATA -->
             <section class="grid grid-cols-2 gap-6">
                 <div>
@@ -155,7 +155,7 @@
                         <option value="SN" data-dial="+221">Senegal (SN / +221)</option>
                         <option value="SG" data-dial="+65">Singapore (SG / +65)</option>
                         <option value="ZA" data-dial="+27">South Africa (ZA / +27)</option>
-                        <option value="KR" data-dial="+82">South Korea (KR / +82)</option>
+                        <option value="KR" data-dial="+82" selected>South Korea (KR / +82)</option>
                         <option value="ES" data-dial="+34">Spain (ES / +34)</option>
                         <option value="LK" data-dial="+94">Sri Lanka (LK / +94)</option>
                         <option value="TZ" data-dial="+255">Tanzania (TZ / +255)</option>
@@ -174,44 +174,48 @@
                 <div>
                     <h3 class="section-title">06. GENDER</h3>
                     <div class="flex gap-4 mt-2">
-                        <label class="text-[10px] flex items-center gap-1 font-black cursor-pointer"><input type="radio" name="gender" value="male" checked class="w-3 h-3 accent-black"> MALE</label>
-                        <label class="text-[10px] flex items-center gap-1 font-black cursor-pointer"><input type="radio" name="gender" value="female" class="w-3 h-3 accent-black"> FEMALE</label>
+                        <label class="text-[10px] flex items-center gap-1 font-black cursor-pointer">
+                            <input type="radio" name="gender" value="male" checked class="w-3 h-3 accent-black"> MALE
+                        </label>
+                        <label class="text-[10px] flex items-center gap-1 font-black cursor-pointer">
+                            <input type="radio" name="gender" value="female" class="w-3 h-3 accent-black"> FEMALE
+                        </label>
                     </div>
                 </div>
             </section>
 
-            <!-- 07. PLATFORM OPTIMIZATION -->
+            <!-- 07. TARGET PLATFORMS -->
             <section>
-                <h3 class="section-title">07. TARGET PLATFORMS (RATIO)</h3>
+                <h3 class="section-title">07. TARGET PLATFORMS (BASE $0.50 + $0.10/EA)</h3>
                 <div class="space-y-3">
                     <!-- Vertical Group -->
                     <div class="p-3 border-2 border-black bg-gray-50">
                         <span class="block text-xs font-black mb-2 text-rose-600">VERTICAL (9:16) - SHORT FORM</span>
                         <div class="flex flex-wrap gap-2 text-[10px] font-black">
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="tiktok" checked class="accent-black"> TIKTOK
+                                <input type="checkbox" name="platform" value="tiktok" checked class="accent-black platform-checkbox"> TIKTOK ($0.10)
                             </label>
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="shorts" checked class="accent-black"> SHORTS
+                                <input type="checkbox" name="platform" value="shorts" checked class="accent-black platform-checkbox"> SHORTS ($0.10)
                             </label>
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="reels" class="accent-black"> REELS
+                                <input type="checkbox" name="platform" value="reels" class="accent-black platform-checkbox"> REELS ($0.10)
                             </label>
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="snapchat" class="accent-black"> SNAPCHAT
+                                <input type="checkbox" name="platform" value="snapchat" class="accent-black platform-checkbox"> SNAPCHAT ($0.10)
                             </label>
                         </div>
                     </div>
-                    
+
                     <!-- Horizontal Group -->
                     <div class="p-3 border-2 border-black bg-gray-50">
                         <span class="block text-xs font-black mb-2 text-blue-600">HORIZONTAL (16:9) - MAIN VIDEO</span>
                         <div class="flex flex-wrap gap-2 text-[10px] font-black">
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="youtube" class="accent-black"> YOUTUBE
+                                <input type="checkbox" name="platform" value="youtube" class="accent-black platform-checkbox"> YOUTUBE ($0.10)
                             </label>
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="x" class="accent-black"> X (TWITTER)
+                                <input type="checkbox" name="platform" value="x" class="accent-black platform-checkbox"> X (TWITTER) ($0.10)
                             </label>
                         </div>
                     </div>
@@ -222,30 +226,46 @@
             <section class="p-4 bg-black text-white">
                 <h3 class="text-[11px] font-black mb-1 uppercase tracking-tighter">08. COPYRIGHT PROTECTION</h3>
                 <label class="flex items-center gap-3 text-[9px] cursor-pointer font-bold leading-tight">
-                    <input type="checkbox" id="copyright" checked class="w-4 h-4 accent-white"> 
+                    <input type="checkbox" id="copyright" checked class="w-4 h-4 accent-white">
                     Embed On-chain TxID to protect your copyright permanently via Pi Governance.
                 </label>
             </section>
-        </div>
 
-        <!-- TOTAL & SUBMIT -->
-        <div class="mt-12 pt-6 border-t-4 border-black">
-            <div class="flex justify-between font-black text-xs mb-6 uppercase tracking-widest">
-                <span>ESTIMATED TOTAL FEE</span>
-                <span class="text-indigo-600 text-lg">$1.06 (USD)</span>
+            <!-- SUBMIT & COST -->
+            <div class="pt-4 border-t-4 border-black">
+                <div class="flex justify-between items-center text-xs font-black mb-4">
+                    <span>FACTORY WHOLESALE COST</span>
+                    <span id="totalCost" class="text-indigo-600 text-lg">$0.70 (USD)</span>
+                </div>
+                <button onclick="submitOrder()" id="submitBtn" class="w-full bg-black text-white font-black py-5 text-sm hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
+                    [ SUBMIT & START AI FACTORY ]
+                </button>
             </div>
-            <button onclick="submitOrder()" id="submitBtn" class="w-full bg-black text-white font-black py-5 text-sm hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
-                [ SUBMIT & START AI FACTORY ]
-            </button>
         </div>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
+        let tg = window.Telegram.WebApp;
         tg.expand();
 
+        // 실시간 원가 계산 로직 (기본 $0.50 + 플랫폼당 $0.10)
+        function updateTotalCost() {
+            const checkedPlatforms = document.querySelectorAll('input[name="platform"]:checked');
+            const baseCost = 0.50;
+            const perPlatformCost = 0.10;
+            const total = baseCost + (checkedPlatforms.length * perPlatformCost);
+            document.getElementById('totalCost').innerText = `$${total.toFixed(2)} (USD)`;
+        }
+
+        // 체크박스 변경 시 금액 실시간 업데이트 리스너 연결
+        document.querySelectorAll('input[name="platform"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateTotalCost);
+        });
+
+        // 페이지 로드 시 최초 1회 실행
+        updateTotalCost();
+
         function submitOrder() {
-            // Validate Region Selection
             const countrySelect = document.getElementById('country');
             if (!countrySelect.value) {
                 alert("Please select a Region!");
@@ -259,15 +279,13 @@
 
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             
-            // Extract BGM filename
             const bgmFileInput = document.getElementById('bgmFile');
             const bgmFileName = bgmFileInput.files.length > 0 ? bgmFileInput.files[0].name : "No BGM selected";
 
-            // Extract Country info for the Ledger
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-            const countryCode = countrySelect.value; // ex: "KR"
-            const countryDialCode = selectedOption.getAttribute('data-dial'); // ex: "+82"
-            const countryFullName = selectedOption.text; // ex: "South Korea (KR / +82)"
+            const countryCode = countrySelect.value;
+            const countryDialCode = selectedOption.getAttribute('data-dial');
+            const countryFullName = selectedOption.text;
 
             const data = {
                 action: "PIONEER_ORDER",
@@ -279,16 +297,22 @@
                 country_code: countryCode,
                 country_dial: countryDialCode,
                 country_display: countryFullName,
-                
+
                 gender: document.querySelector('input[name="gender"]:checked').value,
                 platforms: platforms,
-                copyright: document.getElementById('copyright').checked,
-                total_usd: "1.06",
-                timestamp: new Date().getTime()
+                copyright: document.getElementById('copyright').checked
             };
 
-            tg.sendData(JSON.stringify(data));
-            setTimeout(() => { tg.close(); }, 800);
+            if (tg && tg.sendData) {
+                tg.sendData(JSON.stringify(data));
+            } else {
+                console.log("Mock Submit Data:", data);
+                alert("Order data generated successfully! (Check console for payload)");
+                setTimeout(() => {
+                    btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                    btn.disabled = false;
+                }, 2000);
+            }
         }
     </script>
 </body>
