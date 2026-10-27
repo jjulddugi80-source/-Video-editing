@@ -70,7 +70,7 @@
         </div>
 
         <div class="space-y-8">
-            <!-- 01. SOURCE STATUS (탭 가능하게 파일 업로드 추가) -->
+            <!-- 01. SOURCE STATUS -->
             <section>
                 <h3 class="section-title text-blue-700 border-blue-700">01. VIDEO SOURCE UPLOAD</h3>
                 <div class="p-3 bg-gray-50 border-2 border-black">
@@ -184,23 +184,23 @@
 
             <!-- 07. TARGET PLATFORMS -->
             <section>
-                <h3 class="section-title">07. TARGET PLATFORMS (BASE \$0.50 + \$0.10/EA)</h3>
+                <h3 class="section-title">07. TARGET PLATFORMS (BASE $0.50 + $0.10/EA)</h3>
                 <div class="space-y-3">
                     <!-- Vertical Group -->
                     <div class="p-3 border-2 border-black bg-gray-50">
                         <span class="block text-xs font-black mb-2 text-rose-600">VERTICAL (9:16) - SHORT FORM</span>
                         <div class="flex flex-wrap gap-2 text-[10px] font-black">
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="tiktok" checked class="accent-black platform-checkbox"> TIKTOK (\$0.10)
+                                <input type="checkbox" name="platform" value="tiktok" checked class="accent-black platform-checkbox"> TIKTOK ($0.10)
                             </label>
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="shorts" checked class="accent-black platform-checkbox"> SHORTS (\$0.10)
+                                <input type="checkbox" name="platform" value="shorts" checked class="accent-black platform-checkbox"> SHORTS ($0.10)
                             </label>
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="reels" class="accent-black platform-checkbox"> REELS (\$0.10)
+                                <input type="checkbox" name="platform" value="reels" class="accent-black platform-checkbox"> REELS ($0.10)
                             </label>
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="snapchat" class="accent-black platform-checkbox"> SNAPCHAT (\$0.10)
+                                <input type="checkbox" name="platform" value="snapchat" class="accent-black platform-checkbox"> SNAPCHAT ($0.10)
                             </label>
                         </div>
                     </div>
@@ -210,10 +210,10 @@
                         <span class="block text-xs font-black mb-2 text-blue-600">HORIZONTAL (16:9) - MAIN VIDEO</span>
                         <div class="flex flex-wrap gap-2 text-[10px] font-black">
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="youtube" class="accent-black platform-checkbox"> YOUTUBE (\$0.10)
+                                <input type="checkbox" name="platform" value="youtube" class="accent-black platform-checkbox"> YOUTUBE ($0.10)
                             </label>
                             <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
-                                <input type="checkbox" name="platform" value="x" class="accent-black platform-checkbox"> X (TWITTER) (\$0.10)
+                                <input type="checkbox" name="platform" value="x" class="accent-black platform-checkbox"> X (TWITTER) ($0.10)
                             </label>
                         </div>
                     </div>
@@ -233,4 +233,89 @@
             <div class="pt-4 border-t-4 border-black">
                 <div class="flex justify-between items-center text-xs font-black mb-4">
                     <span>FACTORY WHOLESALE COST</span>
-                    <span id="totalCost" class="text-indigo-6
+                    <span id="totalCost" class="text-indigo-600 text-lg">$0.70 (USD)</span>
+                </div>
+                <button onclick="submitOrder()" id="submitBtn" class="w-full bg-black text-white font-black py-5 text-sm hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
+                    [ SUBMIT & START AI FACTORY ]
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // 실시간 원가 계산 로직 (기본 $0.50 + 플랫폼당 $0.10)
+        function updateTotalCost() {
+            const checkedPlatforms = document.querySelectorAll('input[name="platform"]:checked');
+            const baseCost = 0.50;
+            const perPlatformCost = 0.10;
+            const total = baseCost + (checkedPlatforms.length * perPlatformCost);
+            document.getElementById('totalCost').innerText = `$${total.toFixed(2)} (USD)`;
+        }
+
+        // 체크박스 변경 시 금액 실시간 업데이트 리스너 연결
+        document.querySelectorAll('input[name="platform"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateTotalCost);
+        });
+
+        // 페이지 로드 시 최초 1회 실행
+        updateTotalCost();
+
+        function submitOrder() {
+            const countrySelect = document.getElementById('country');
+            if (!countrySelect.value) {
+                alert("Please select a Region!");
+                countrySelect.focus();
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "ENCRYPTING & SENDING... 🚀";
+            btn.disabled = true;
+
+            const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
+            
+            const videoFileInput = document.getElementById('videoFile');
+            const videoFileName = videoFileInput.files.length > 0 ? videoFileInput.files[0].name : "No video selected";
+
+            const bgmFileInput = document.getElementById('bgmFile');
+            const bgmFileName = bgmFileInput.files.length > 0 ? bgmFileInput.files[0].name : "No BGM selected";
+
+            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+            const countryCode = countrySelect.value;
+            const countryDialCode = selectedOption.getAttribute('data-dial');
+            const countryFullName = selectedOption.text;
+
+            const data = {
+                action: "PIONEER_ORDER",
+                video_file_name: videoFileName,
+                subtitle: document.getElementById('subtitle').value,
+                bgm_file_name: bgmFileName,
+                prompt: document.getElementById('prompt').value,
+                
+                // 장부용 메타데이터 분리 전송
+                country_code: countryCode,
+                country_dial: countryDialCode,
+                country_display: countryFullName,
+
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                platforms: platforms,
+                copyright: document.getElementById('copyright').checked
+            };
+
+            if (tg && tg.sendData) {
+                tg.sendData(JSON.stringify(data));
+            } else {
+                console.log("Mock Submit Data:", data);
+                alert("Order data generated successfully! (Check console for payload)");
+                setTimeout(() => {
+                    btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
