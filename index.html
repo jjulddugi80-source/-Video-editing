@@ -58,7 +58,6 @@
     </style>
 </head>
 <body class="antialiased">
-
     <div class="form-border">
         <!-- HEADER -->
         <div class="text-center border-b-4 border-black pb-4 mb-6">
@@ -322,29 +321,29 @@
         function submitOrder() {
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
             const parentTxId = document.getElementById('parentTxId').value;
-
+            
             if (orderType === 'REV' && !parentTxId.trim()) {
                 alert("Please enter or select the Target Parent Tx ID for revision!");
                 document.getElementById('parentTxId').focus();
                 return;
             }
-
+            
             const countrySelect = document.getElementById('country');
             if (!countrySelect.value) {
                 alert("Please select a Region!");
                 countrySelect.focus();
                 return;
             }
-
+            
             const btn = document.getElementById('submitBtn');
             btn.innerText = "ENCRYPTING & SENDING... 🚀";
             btn.disabled = true;
-
+            
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             const videoFileName = document.getElementById('videoFile').files.length > 0 ? document.getElementById('videoFile').files[0].name : "No video selected";
             const bgmFileName = document.getElementById('bgmFile').files.length > 0 ? document.getElementById('bgmFile').files[0].name : "No BGM selected";
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-
+            
             const data = {
                 action: "PIONEER_ORDER",
                 order_type: orderType,
@@ -360,7 +359,7 @@
                 platforms: platforms,
                 copyright: document.getElementById('copyright').checked
             };
-
+            
             if (tg && tg.sendData) {
                 tg.sendData(JSON.stringify(data));
             } else {
