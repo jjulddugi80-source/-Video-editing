@@ -61,7 +61,7 @@
 
     <div class="form-border">
         <!-- HEADER -->
-        <div class="text-center border-b-4 border-black pb-4 mb-8">
+        <div class="text-center border-b-4 border-black pb-4 mb-6">
             <h1 class="text-2xl font-black tracking-tighter uppercase">[ AI VIDEO GEN ORDER ]</h1>
             <div class="flex justify-between items-center mt-2 px-1 text-[9px] font-bold text-gray-500">
                 <span>REF: PIONEER-EDITION-2026</span>
@@ -69,7 +69,46 @@
             </div>
         </div>
 
+        <!-- 📢 NATIVE LANGUAGE NOTICE BANNER -->
+        <div class="p-3 bg-black text-white border-2 border-black mb-6">
+            <div class="flex items-center gap-2">
+                <span class="text-lg">🗣️</span>
+                <div>
+                    <p class="text-xs font-black tracking-wide uppercase text-yellow-400">
+                        SPEAK YOUR NATIVE LANGUAGE!
+                    </p>
+                    <p class="text-[9px] font-bold text-gray-300 leading-tight mt-0.5">
+                        No need for English! Feel free to write subtitles and editing prompts in your local native language.
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <div class="space-y-8">
+            <!-- 00. ORDER TYPE (NEW vs REVISION) -->
+            <section class="p-4 bg-amber-50 border-2 border-black">
+                <h3 class="section-title text-amber-800 border-amber-800">00. SELECT ORDER TYPE</h3>
+                <div class="flex flex-col sm:flex-row gap-4 mt-3 mb-2">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-black">
+                        <input type="radio" name="order_type" value="NEW" checked onclick="toggleOrderType('NEW')" class="accent-black w-4 h-4">
+                        <span>NEW ORDER (BASE $0.50 + PLATFORMS)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-black text-indigo-700">
+                        <input type="radio" name="order_type" value="REV" onclick="toggleOrderType('REV')" class="accent-indigo-700 w-4 h-4">
+                        <span>REVISION (0.50 Pi + 0.01 Pi)</span>
+                    </label>
+                </div>
+
+                <!-- REVISION TARGET ID (수정 선택 시에만 활성화) -->
+                <div id="revision-container" class="hidden mt-3 pt-3 border-t-2 border-black">
+                    <label class="block text-[10px] font-black text-indigo-700 mb-1 uppercase">Target Parent Tx ID / Original REF:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="parentTxId" placeholder="e.g., 35 or PIONEER-0089" class="w-full bg-white border-2 border-black p-2 text-xs font-mono font-bold uppercase">
+                    </div>
+                    <p class="text-[9px] font-bold text-gray-500 mt-1">※ Subtitle, timeline, or position adjustments. Fast FFmpeg local render (Fixed 0.50 Pi + 0.01 Pi Tx Fee).</p>
+                </div>
+            </section>
+
             <!-- 01. SOURCE STATUS -->
             <section>
                 <h3 class="section-title text-blue-700 border-blue-700">01. VIDEO SOURCE UPLOAD</h3>
@@ -82,7 +121,7 @@
             <!-- 02. SUBTITLE -->
             <section>
                 <h3 class="section-title">02. SCREEN SUBTITLE</h3>
-                <input type="text" id="subtitle" class="input-underline text-sm uppercase" placeholder="Text to be burned on video (e.g. BREAKING NEWS)">
+                <input type="text" id="subtitle" class="input-underline text-sm uppercase" placeholder="Text in your native language (e.g. PHỞ NGON NHẤT SÀI GÒN)">
             </section>
 
             <!-- 03. CUSTOM BGM -->
@@ -97,12 +136,12 @@
             <!-- 04. CREATIVE PROMPT -->
             <section>
                 <h3 class="section-title text-indigo-700 border-indigo-700">04. EDITING DIRECTION</h3>
-                <p class="text-[9px] font-bold text-gray-500 mb-2">Describe your desired editing style, mood, or specific effects in detail.</p>
-                <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-2 border-black p-3 text-sm font-bold outline-none resize-none placeholder-gray-400" placeholder="e.g., Cinematic lighting, epic mood, stormy background, make the spear tip shine sharply."></textarea>
+                <p class="text-[9px] font-bold text-gray-500 mb-2">Describe in your native language about editing style, mood, or specific effects.</p>
+                <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-2 border-black p-3 text-sm font-bold outline-none resize-none placeholder-gray-400" placeholder="Describe in your native language... (e.g., Quay cận cảnh tô phở bốc khói, ánh sáng đẹp)"></textarea>
             </section>
 
             <!-- 05. METADATA -->
-            <section class="grid grid-cols-2 gap-6">
+            <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                     <h3 class="section-title">05. REGION</h3>
                     <select id="country" class="input-underline text-sm cursor-pointer font-bold" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
@@ -246,13 +285,30 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
 
-        // 실시간 원가 계산 로직 (기본 $0.50 + 플랫폼당 $0.10)
+        function toggleOrderType(type) {
+            const revContainer = document.getElementById('revision-container');
+            if (type === 'REV') {
+                revContainer.classList.remove('hidden');
+            } else {
+                revContainer.classList.add('hidden');
+            }
+            updateTotalCost();
+        }
+
+        // 실시간 비용 계산 로직 (NEW vs REVISION 분기)
         function updateTotalCost() {
-            const checkedPlatforms = document.querySelectorAll('input[name="platform"]:checked');
-            const baseCost = 0.50;
-            const perPlatformCost = 0.10;
-            const total = baseCost + (checkedPlatforms.length * perPlatformCost);
-            document.getElementById('totalCost').innerText = `$${total.toFixed(2)} (USD)`;
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const totalCostEl = document.getElementById('totalCost');
+            
+            if (orderType === 'REV') {
+                totalCostEl.innerText = `0.51 Pi (0.50 Pi + 0.01 Tx Fee)`;
+            } else {
+                const checkedPlatforms = document.querySelectorAll('input[name="platform"]:checked');
+                const baseCost = 0.50;
+                const perPlatformCost = 0.10;
+                const total = baseCost + (checkedPlatforms.length * perPlatformCost);
+                totalCostEl.innerText = `$${total.toFixed(2)} (USD Equivalent Pi)`;
+            }
         }
 
         // 체크박스 변경 시 금액 실시간 업데이트 리스너 연결
@@ -264,6 +320,15 @@
         updateTotalCost();
 
         function submitOrder() {
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const parentTxId = document.getElementById('parentTxId').value;
+
+            if (orderType === 'REV' && !parentTxId.trim()) {
+                alert("Please enter or select the Target Parent Tx ID for revision!");
+                document.getElementById('parentTxId').focus();
+                return;
+            }
+
             const countrySelect = document.getElementById('country');
             if (!countrySelect.value) {
                 alert("Please select a Region!");
@@ -276,30 +341,21 @@
             btn.disabled = true;
 
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
-            
-            const videoFileInput = document.getElementById('videoFile');
-            const videoFileName = videoFileInput.files.length > 0 ? videoFileInput.files[0].name : "No video selected";
-
-            const bgmFileInput = document.getElementById('bgmFile');
-            const bgmFileName = bgmFileInput.files.length > 0 ? bgmFileInput.files[0].name : "No BGM selected";
-
+            const videoFileName = document.getElementById('videoFile').files.length > 0 ? document.getElementById('videoFile').files[0].name : "No video selected";
+            const bgmFileName = document.getElementById('bgmFile').files.length > 0 ? document.getElementById('bgmFile').files[0].name : "No BGM selected";
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-            const countryCode = countrySelect.value;
-            const countryDialCode = selectedOption.getAttribute('data-dial');
-            const countryFullName = selectedOption.text;
 
             const data = {
                 action: "PIONEER_ORDER",
+                order_type: orderType,
+                parent_tx_id: orderType === 'REV' ? parentTxId : null,
                 video_file_name: videoFileName,
                 subtitle: document.getElementById('subtitle').value,
                 bgm_file_name: bgmFileName,
                 prompt: document.getElementById('prompt').value,
-                
-                // 장부용 메타데이터 분리 전송
-                country_code: countryCode,
-                country_dial: countryDialCode,
-                country_display: countryFullName,
-
+                country_code: countrySelect.value,
+                country_dial: selectedOption.getAttribute('data-dial'),
+                country_display: selectedOption.text,
                 gender: document.querySelector('input[name="gender"]:checked').value,
                 platforms: platforms,
                 copyright: document.getElementById('copyright').checked
@@ -309,7 +365,7 @@
                 tg.sendData(JSON.stringify(data));
             } else {
                 console.log("Mock Submit Data:", data);
-                alert("Order data generated successfully! (Check console for payload)");
+                alert(`Order data generated successfully! Type: ${orderType} (Check console)`);
                 setTimeout(() => {
                     btn.innerText = "[ SUBMIT & START AI FACTORY ]";
                     btn.disabled = false;
