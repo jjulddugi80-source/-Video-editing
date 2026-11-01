@@ -98,7 +98,7 @@
                     </label>
                 </div>
 
-                <!-- REVISION TARGET ID (수정 선택 시에만 활성화) -->
+                <!-- REVISION TARGET ID -->
                 <div id="revision-container" class="hidden mt-3 pt-3 border-t-2 border-black">
                     <label class="block text-[10px] font-black text-indigo-700 mb-1 uppercase">Target Parent Tx ID / Original REF:</label>
                     <div class="flex gap-2">
@@ -224,7 +224,6 @@
             <section>
                 <h3 class="section-title">07. TARGET PLATFORMS (BASE $0.50 + $0.10/EA)</h3>
                 <div class="space-y-3">
-                    <!-- Vertical Group -->
                     <div class="p-3 border-2 border-black bg-gray-50">
                         <span class="block text-xs font-black mb-2 text-rose-600">VERTICAL (9:16) - SHORT FORM</span>
                         <div class="flex flex-wrap gap-2 text-[10px] font-black">
@@ -243,7 +242,6 @@
                         </div>
                     </div>
 
-                    <!-- Horizontal Group -->
                     <div class="p-3 border-2 border-black bg-gray-50">
                         <span class="block text-xs font-black mb-2 text-blue-600">HORIZONTAL (16:9) - MAIN VIDEO</span>
                         <div class="flex flex-wrap gap-2 text-[10px] font-black">
@@ -294,7 +292,6 @@
             updateTotalCost();
         }
 
-        // 실시간 비용 계산 로직 (NEW vs REVISION 분기)
         function updateTotalCost() {
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
             const totalCostEl = document.getElementById('totalCost');
@@ -310,12 +307,10 @@
             }
         }
 
-        // 체크박스 변경 시 금액 실시간 업데이트 리스너 연결
         document.querySelectorAll('input[name="platform"]').forEach(checkbox => {
             checkbox.addEventListener('change', updateTotalCost);
         });
 
-        // 페이지 로드 시 최초 1회 실행
         updateTotalCost();
 
         function submitOrder() {
