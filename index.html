@@ -366,9 +366,22 @@
                 return;
             }
 
-            // ② 타이머 없는 깔끔한 전송 분기
-            if (tg && tg.sendData) {
-                tg.sendData(payload);
+            // ② 전송 후 확실하게 폼 창을 닫아주는 안전장치 적용
+            if (tg && typeof tg.sendData === "function") {
+                try {
+                    tg.sendData(payload);
+                    
+                    // 0.5초 뒤 폼 창을 강제로 닫아버려 전송 중 멈춤 현상을 원천 차단합니다!
+                    setTimeout(() => {
+                        try { tg.close(); } catch (e) {}
+                    }, 500);
+
+                } catch (error) {
+                    alert("전송 중 오류가 발생했습니다.");
+                    btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                    btn.disabled = false;
+                    isSubmitting = false;
+                }
             } else {
                 alert(`[Mock Submit] Order sent successfully!\n\nPayload:\n${payload}`);
                 setTimeout(() => {
