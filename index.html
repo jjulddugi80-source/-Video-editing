@@ -268,7 +268,7 @@
             }
 
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
-            const parentTxId = document.getElementById('parentTxId').value;
+            const parentTxId = document.getElementById('parentTxId'].value;
             if (orderType === 'REV' && !parentTxId.trim()) {
                 alert("Please enter your previous OTP reference!");
                 document.getElementById('parentTxId').focus();
@@ -277,24 +277,15 @@
 
             isSubmitting = true;
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "ENCRYPTING & SENDING... 🚀";
+            btn.innerText = "SENDING TO TELEGRAM... 🚀";
             btn.disabled = true;
 
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
-            // 텔레그램 유저 고유 ID 추출 (안전 장치 포함)
-            let chatId = 8640140792; // 기본값 방어
-            try {
-                if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
-                    chatId = tg.initDataUnsafe.user.id;
-                }
-            } catch(e) {}
-
             const data = {
                 type: "APP_ORDER",
                 action: "PIONEER_ORDER",
-                chat_id: chatId, // 👈 n8n 분류기가 즉시 낚아채도록 챗아이디 명시적 포함!
                 order_type: orderType,
                 parent_tx_id: orderType === 'REV' ? parentTxId : null,
                 subtitle: document.getElementById('subtitle').value,
@@ -308,44 +299,18 @@
                 calculated_pi_price: currentPiPriceUsd
             };
 
-            // 💡 텔레그램 sendData와 봇 API 직접 전송을 동시에 만족하는 안전한 발송 로직
+            // 💡 텔레그램 공식 웹앱 sendData 정석 방식 (폴링 노드와 완벽 호환)
             if (tg && tg.sendData) {
-                try {
-                    tg.sendData(JSON.stringify(data));
-                    setTimeout(() => {
-                        try { tg.close(); } catch(e) {}
-                    }, 2000);
-                } catch(err) {
-                    fallbackSend(data, btn);
-                }
+                tg.sendData(JSON.stringify(data));
+                setTimeout(() => {
+                    try { tg.close(); } catch(e) {}
+                }, 2000);
             } else {
-                fallbackSend(data, btn);
+                alert("[Mock Submit] Order data ready! (Open inside Telegram App to send to bot)");
+                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                btn.disabled = false;
+                isSubmitting = false;
             }
-        }
-
-        // 웹이나 특수 환경일 때 텔레그램 봇 API로 직통 전송하는 백업 함수
-        function fallbackSend(data, btn) {
-            const botToken = "8465078874:AAElwfmhvI8ObpvB8Fo5lZA0nGXqM9qqw8o";
-            const textMsg = `[WEB APP ORDER]\n` + JSON.stringify(data, null, 2);
-            
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: data.chat_id,
-                    text: textMsg
-                })
-            }).then(res => res.json()).then(res => {
-                alert("Order submitted successfully to AI Factory! 🎉");
-                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
-                btn.disabled = false;
-                isSubmitting = false;
-            }).catch(err => {
-                alert("Submission failed. Please try again.");
-                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
-                btn.disabled = false;
-                isSubmitting = false;
-            });
         }
     </script>
 </body>
