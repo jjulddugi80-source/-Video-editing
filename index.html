@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dreamfactory Edit</title>
+    <title>Pioneer Creator Order Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -11,17 +11,14 @@
             background-color: #f8fafc;
             color: #1e293b;
             font-family: 'Courier New', Courier, monospace;
-            padding: 8px;
-            margin: 0;
+            padding: 15px;
         }
         .form-border {
-            border: 2px solid #000;
-            padding: 16px;
+            border: 3px solid #000;
+            padding: 24px;
             background: #ffffff;
             position: relative;
-            box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            box-sizing: border-box;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.1);
         }
         .form-border::after {
             content: "OFFICIAL DOCUMENT";
@@ -29,7 +26,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-30deg);
-            font-size: 30px;
+            font-size: 40px;
             color: rgba(0, 0, 0, 0.03);
             pointer-events: none;
             white-space: nowrap;
@@ -37,338 +34,340 @@
         .input-underline {
             border-bottom: 2px solid #000;
             width: 100%;
-            padding: 8px 0;
+            padding: 10px 0;
             background: transparent;
             outline: none;
             font-weight: bold;
         }
         .section-title {
             font-weight: 900;
-            font-size: 13px;
+            font-size: 14px;
             text-transform: uppercase;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             border-left: 4px solid #000;
-            padding-left: 6px;
+            padding-left: 8px;
         }
-        /* 국가 선택 드롭다운이 모바일 텔레그램 웹뷰에서 정상 작동하도록 설정 */
         select {
-            -webkit-appearance: menulist;
-            -moz-appearance: menulist;
-            appearance: menulist;
-            width: 100%;
-            text-overflow: clip;
-            white-space: normal;
-            background: transparent;
-            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
     </style>
 </head>
 <body class="antialiased">
 
-<div class="form-border">
-    <!-- HEADER -->
-    <div class="text-center border-b-4 border-black pb-3 mb-4">
-        <h1 class="text-xl font-black tracking-tighter uppercase">[ DREAMFACTORY EDIT ]</h1>
-        <div class="flex justify-between items-center mt-1 px-1 text-[8px] font-bold text-gray-500">
-            <span>REF: DREAMFACTORY-EDITION-2026</span>
-            <span>TYPE: GOVERNANCE ASSET</span>
-        </div>
-    </div>
-
-    <!-- 🛡️ 경고문구 -->
-    <div class="p-2.5 bg-black text-white border-2 border-black mb-4">
-        <div class="flex items-center gap-2">
-            <span class="text-base">🗣️</span>
-            <div>
-                <p class="text-[11px] font-black tracking-wide uppercase text-yellow-400">SPEAK YOUR NATIVE LANGUAGE!</p>
-                <p class="text-[8px] font-bold text-gray-300 leading-tight mt-0.5">CRITICAL: NEVER INCLUDE SECRETS OR PRIVATE PHRASES UNDER ANY CIRCUMSTANCES! Feel free to write in your native language.</p>
+    <div class="form-border">
+        <!-- HEADER -->
+        <div class="text-center border-b-4 border-black pb-4 mb-6">
+            <h1 class="text-2xl font-black tracking-tighter uppercase">[ AI VIDEO EDIT ORDER ]</h1>
+            <div class="flex justify-between items-center mt-2 px-1 text-[9px] font-bold text-gray-500">
+                <span>REF: PIONEER-EDITION-2026</span>
+                <span>TYPE: GOVERNANCE ASSET</span>
             </div>
         </div>
-    </div>
 
-    <div class="space-y-6">
-        <!-- 00. ORDER TYPE -->
-        <section class="p-3 bg-amber-50 border-2 border-black">
-            <h3 class="section-title text-amber-800 border-amber-800">00. SELECT ORDER TYPE</h3>
-            <div class="flex flex-col gap-2 mt-2 mb-2">
-                <label class="flex items-center gap-2 cursor-pointer text-xs font-black">
-                    <input type="radio" name="order_type" value="NEW" checked onclick="toggleOrderType('NEW')" class="accent-black w-4 h-4">
-                    <span>NEW ORDER (Base $0.50 + $0.10/EA + 5% Fee)</span>
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-xs font-black text-indigo-700">
-                    <input type="radio" name="order_type" value="REV" onclick="toggleOrderType('REV')" class="accent-indigo-700 w-4 h-4">
-                    <span>REVISION ($0.05 USD + 5% Fee)</span>
-                </label>
-            </div>
-            <div id="revision-container" class="hidden mt-2 pt-2 border-t-2 border-black">
-                <label class="block text-[10px] font-black text-indigo-700 mb-1 uppercase">Enter Previous OTP / Reference:</label>
-                <input type="text" id="parentTxId" placeholder="e.g., DFOTP-9821" class="w-full bg-white border-2 border-black p-2 text-xs font-mono font-bold uppercase">
-            </div>
-        </section>
-
-        <!-- 01. SCREEN SUBTITLE -->
-        <section>
-            <h3 class="section-title">01. SCREEN SUBTITLE</h3>
-            <input type="text" id="subtitle" class="input-underline text-xs uppercase" placeholder="Text to be burned on video (e.g. BREAKING NEWS)">
-        </section>
-
-        <!-- 02. MEDIA FILE UPLOAD GUIDE -->
-        <section class="p-3 bg-blue-50 border-2 border-black">
-            <h3 class="section-title text-blue-800 border-blue-800">02. MEDIA FILE UPLOAD GUIDE</h3>
-            <div class="text-[10px] font-bold text-gray-700 space-y-1.5 mt-2">
-                <p>🚀 After submitting this form, please upload both files directly to the Telegram chat:</p>
-                <p class="text-blue-700 font-black">1. Source Video File (MP4/MOV)</p>
-                <p class="text-emerald-700 font-black">2. Background Music File (MP3)</p>
-            </div>
-        </section>
-
-        <!-- 03. EDITING DIRECTION -->
-        <section>
-            <h3 class="section-title text-indigo-700 border-indigo-700">03. EDITING DIRECTION</h3>
-            <p class="text-[9px] font-bold text-gray-500 mb-2">Describe your desired editing style, mood, or specific effects in detail.</p>
-            <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-2 border-black p-2.5 text-xs font-bold outline-none resize-none placeholder-gray-400" placeholder="e.g., Cinematic lighting, epic mood, stormy background, make the spear tip shine sharply."></textarea>
-        </section>
-
-        <!-- 04. REGION & GENDER -->
-        <section class="space-y-4">
-            <div>
-                <h3 class="section-title">04. REGION</h3>
-                <select id="country" class="input-underline text-xs cursor-pointer font-bold">
-                    <option value="" disabled selected>Select Region...</option>
-                    <option value="AF" data-dial="+93">Afghanistan (AF / +93)</option>
-                    <option value="AL" data-dial="+355">Albania (AL / +355)</option>
-                    <option value="DZ" data-dial="+213">Algeria (DZ / +213)</option>
-                    <option value="AR" data-dial="+54">Argentina (AR / +54)</option>
-                    <option value="AU" data-dial="+61">Australia (AU / +61)</option>
-                    <option value="AT" data-dial="+43">Austria (AT / +43)</option>
-                    <option value="BD" data-dial="+880">Bangladesh (BD / +880)</option>
-                    <option value="BE" data-dial="+32">Belgium (BE / +32)</option>
-                    <option value="BR" data-dial="+55">Brazil (BR / +55)</option>
-                    <option value="KH" data-dial="+855">Cambodia (KH / +855)</option>
-                    <option value="CM" data-dial="+237">Cameroon (CM / +237)</option>
-                    <option value="CA" data-dial="+1">Canada (CA / +1)</option>
-                    <option value="CL" data-dial="+56">Chile (CL / +56)</option>
-                    <option value="CN" data-dial="+86">China (CN / +86)</option>
-                    <option value="CO" data-dial="+57">Colombia (CO / +57)</option>
-                    <option value="CI" data-dial="+225">Côte d'Ivoire (CI / +225)</option>
-                    <option value="EG" data-dial="+20">Egypt (EG / +20)</option>
-                    <option value="ET" data-dial="+251">Ethiopia (ET / +251)</option>
-                    <option value="FR" data-dial="+33">France (FR / +33)</option>
-                    <option value="DE" data-dial="+49">Germany (DE / +49)</option>
-                    <option value="GH" data-dial="+233">Ghana (GH / +233)</option>
-                    <option value="GR" data-dial="+30">Greece (GR / +30)</option>
-                    <option value="IN" data-dial="+91">India (IN / +91)</option>
-                    <option value="ID" data-dial="+62">Indonesia (ID / +62)</option>
-                    <option value="IR" data-dial="+98">Iran (IR / +98)</option>
-                    <option value="IQ" data-dial="+964">Iraq (IQ / +964)</option>
-                    <option value="IT" data-dial="+39">Italy (IT / +39)</option>
-                    <option value="JP" data-dial="+81">Japan (JP / +81)</option>
-                    <option value="KE" data-dial="+254">Kenya (KE / +254)</option>
-                    <option value="MY" data-dial="+60">Malaysia (MY / +60)</option>
-                    <option value="MX" data-dial="+52">Mexico (MX / +52)</option>
-                    <option value="MA" data-dial="+212">Morocco (MA / +212)</option>
-                    <option value="MM" data-dial="+95">Myanmar (MM / +95)</option>
-                    <option value="NP" data-dial="+977">Nepal (NP / +977)</option>
-                    <option value="NL" data-dial="+31">Netherlands (NL / +31)</option>
-                    <option value="NZ" data-dial="+64">New Zealand (NZ / +64)</option>
-                    <option value="NG" data-dial="+234">Nigeria (NG / +234)</option>
-                    <option value="PK" data-dial="+92">Pakistan (PK / +92)</option>
-                    <option value="PE" data-dial="+51">Peru (PE / +51)</option>
-                    <option value="PH" data-dial="+63">Philippines (PH / +63)</option>
-                    <option value="PL" data-dial="+48">Poland (PL / +48)</option>
-                    <option value="RU" data-dial="+7">Russia (RU / +7)</option>
-                    <option value="SA" data-dial="+966">Saudi Arabia (SA / +966)</option>
-                    <option value="SN" data-dial="+221">Senegal (SN / +221)</option>
-                    <option value="SG" data-dial="+65">Singapore (SG / +65)</option>
-                    <option value="ZA" data-dial="+27">South Africa (ZA / +27)</option>
-                    <option value="KR" data-dial="+82" selected>South Korea (KR / +82)</option>
-                    <option value="ES" data-dial="+34">Spain (ES / +34)</option>
-                    <option value="LK" data-dial="+94">Sri Lanka (LK / +94)</option>
-                    <option value="TZ" data-dial="+255">Tanzania (TZ / +255)</option>
-                    <option value="TH" data-dial="+66">Thailand (TH / +66)</option>
-                    <option value="TR" data-dial="+90">Turkey (TR / +90)</option>
-                    <option value="UG" data-dial="+256">Uganda (UG / +256)</option>
-                    <option value="UA" data-dial="+380">Ukraine (UA / +380)</option>
-                    <option value="AE" data-dial="+971">United Arab Emirates (AE / +971)</option>
-                    <option value="GB" data-dial="+44">United Kingdom (GB / +44)</option>
-                    <option value="US" data-dial="+1">United States (US / +1)</option>
-                    <option value="VN" data-dial="+84">Vietnam (VN / +84)</option>
-                    <option value="ZM" data-dial="+260">Zambia (ZM / +260)</option>
-                    <option value="ZW" data-dial="+263">Zimbabwe (ZW / +263)</option>
-                </select>
-            </div>
-            <div>
-                <h3 class="section-title">05. GENDER</h3>
-                <div class="flex gap-4 mt-2">
-                    <label class="text-xs flex items-center gap-1 font-black cursor-pointer"><input type="radio" name="gender" value="male" checked class="w-3 h-3 accent-black"> MALE</label>
-                    <label class="text-xs flex items-center gap-1 font-black cursor-pointer"><input type="radio" name="gender" value="female" class="w-3 h-3 accent-black"> FEMALE</label>
+        <!-- 📢 NATIVE LANGUAGE NOTICE BANNER -->
+        <div class="p-3 bg-black text-white border-2 border-black mb-6">
+            <div class="flex items-center gap-2">
+                <span class="text-lg">🗣️</span>
+                <div>
+                    <p class="text-xs font-black tracking-wide uppercase text-yellow-400">
+                        SPEAK YOUR NATIVE LANGUAGE!
+                    </p>
+                    <p class="text-[9px] font-bold text-gray-300 leading-tight mt-0.5">
+                        No need for English! Feel free to write subtitles and editing prompts in your local native language.
+                    </p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- 06. TARGET PLATFORMS -->
-        <section>
-            <h3 class="section-title">06. TARGET PLATFORMS (RATIO)</h3>
-            <div class="space-y-2.5">
-                <div class="p-2.5 border-2 border-black bg-gray-50">
-                    <span class="block text-[11px] font-black mb-2 text-rose-600">VERTICAL (9:16) - SHORT FORM</span>
-                    <div class="flex flex-wrap gap-2 text-[10px] font-black">
-                        <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="tiktok" checked class="accent-black platform-checkbox"> TIKTOK</label>
-                        <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="shorts" checked class="accent-black platform-checkbox"> SHORTS</label>
-                        <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="reels" class="platform-checkbox"> REELS</label>
-                        <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="snapchat" class="platform-checkbox"> SNAPCHAT</label>
+        <div class="space-y-8">
+            <!-- 00. ORDER TYPE (NEW vs REVISION) -->
+            <section class="p-4 bg-amber-50 border-2 border-black">
+                <h3 class="section-title text-amber-800 border-amber-800">00. SELECT ORDER TYPE</h3>
+                <div class="flex flex-col sm:flex-row gap-4 mt-3 mb-2">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-black">
+                        <input type="radio" name="order_type" value="NEW" checked onclick="toggleOrderType('NEW')" class="accent-black w-4 h-4">
+                        <span>NEW ORDER (BASE $0.50 + PLATFORMS)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-black text-indigo-700">
+                        <input type="radio" name="order_type" value="REV" onclick="toggleOrderType('REV')" class="accent-indigo-700 w-4 h-4">
+                        <span>REVISION (0.50 Pi + 0.01 Pi)</span>
+                    </label>
+                </div>
+
+                <!-- REVISION TARGET ID -->
+                <div id="revision-container" class="hidden mt-3 pt-3 border-t-2 border-black">
+                    <label class="block text-[10px] font-black text-indigo-700 mb-1 uppercase">Target Parent Tx ID / Original REF:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="parentTxId" placeholder="e.g., 35 or PIONEER-0089" class="w-full bg-white border-2 border-black p-2 text-xs font-mono font-bold uppercase">
+                    </div>
+                    <p class="text-[9px] font-bold text-gray-500 mt-1">※ Subtitle, timeline, or position adjustments. Fast FFmpeg local render (Fixed 0.50 Pi + 0.01 Pi Tx Fee).</p>
+                </div>
+            </section>
+
+            <!-- 01. SOURCE STATUS -->
+            <section>
+                <h3 class="section-title text-blue-700 border-blue-700">01. VIDEO SOURCE UPLOAD</h3>
+                <div class="p-3 bg-gray-50 border-2 border-black">
+                    <p class="text-[9px] font-bold text-gray-500 mb-2">Select your source video file to process.</p>
+                    <input type="file" id="videoFile" accept="video/*" class="text-xs font-bold w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-black file:bg-black file:text-white hover:file:bg-zinc-800">
+                </div>
+            </section>
+
+            <!-- 02. SUBTITLE -->
+            <section>
+                <h3 class="section-title">02. SCREEN SUBTITLE</h3>
+                <input type="text" id="subtitle" class="input-underline text-sm uppercase" placeholder="Text in your native language (e.g. PHỞ NGON NHẤT SÀI GÒN)">
+            </section>
+
+            <!-- 03. MEDIA FILE UPLOAD GUIDE (BGM 폼 칸 제거 및 챗창 안내로 통합) -->
+            <section class="p-3 bg-blue-50 border-2 border-black">
+                <h3 class="section-title text-blue-800 border-blue-800">03. MEDIA FILE UPLOAD GUIDE</h3>
+                <div class="text-[10px] font-bold text-gray-700 space-y-1.5 mt-2">
+                    <p>🚀 After submitting this form, please upload both files directly to the Telegram chat:</p>
+                    <p class="text-blue-700 font-black">1. Source Video File (MP4/MOV)</p>
+                    <p class="text-emerald-700 font-black">2. Background Music File (MP3)</p>
+                </div>
+            </section>
+
+            <!-- 04. CREATIVE PROMPT -->
+            <section>
+                <h3 class="section-title text-indigo-700 border-indigo-700">04. EDITING DIRECTION</h3>
+                <p class="text-[9px] font-bold text-gray-500 mb-2">Describe in your native language about editing style, mood, or specific effects.</p>
+                <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-2 border-black p-3 text-sm font-bold outline-none resize-none placeholder-gray-400" placeholder="Describe in your native language... (e.g., Quay cận cảnh tô phở bốc khói, ánh sáng đẹp)"></textarea>
+            </section>
+
+            <!-- 05. METADATA (국가선택창 활성화 복구) -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="section-title">05. REGION</h3>
+                    <select id="country" class="input-underline text-sm cursor-pointer font-bold" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                        <option value="" disabled selected>Select Region...</option>
+                        <option value="AF" data-dial="+93">Afghanistan (AF / +93)</option>
+                        <option value="AL" data-dial="+355">Albania (AL / +355)</option>
+                        <option value="DZ" data-dial="+213">Algeria (DZ / +213)</option>
+                        <option value="AR" data-dial="+54">Argentina (AR / +54)</option>
+                        <option value="AU" data-dial="+61">Australia (AU / +61)</option>
+                        <option value="AT" data-dial="+43">Austria (AT / +43)</option>
+                        <option value="BD" data-dial="+880">Bangladesh (BD / +880)</option>
+                        <option value="BE" data-dial="+32">Belgium (BE / +32)</option>
+                        <option value="BR" data-dial="+55">Brazil (BR / +55)</option>
+                        <option value="KH" data-dial="+855">Cambodia (KH / +855)</option>
+                        <option value="CM" data-dial="+237">Cameroon (CM / +237)</option>
+                        <option value="CA" data-dial="+1">Canada (CA / +1)</option>
+                        <option value="CL" data-dial="+56">Chile (CL / +56)</option>
+                        <option value="CN" data-dial="+86">China (CN / +86)</option>
+                        <option value="CO" data-dial="+57">Colombia (CO / +57)</option>
+                        <option value="CI" data-dial="+225">Côte d'Ivoire (CI / +225)</option>
+                        <option value="EG" data-dial="+20">Egypt (EG / +20)</option>
+                        <option value="ET" data-dial="+251">Ethiopia (ET / +251)</option>
+                        <option value="FR" data-dial="+33">France (FR / +33)</option>
+                        <option value="DE" data-dial="+49">Germany (DE / +49)</option>
+                        <option value="GH" data-dial="+233">Ghana (GH / +233)</option>
+                        <option value="GR" data-dial="+30">Greece (GR / +30)</option>
+                        <option value="IN" data-dial="+91">India (IN / +91)</option>
+                        <option value="ID" data-dial="+62">Indonesia (ID / +62)</option>
+                        <option value="IR" data-dial="+98">Iran (IR / +98)</option>
+                        <option value="IQ" data-dial="+964">Iraq (IQ / +964)</option>
+                        <option value="IT" data-dial="+39">Italy (IT / +39)</option>
+                        <option value="JP" data-dial="+81">Japan (JP / +81)</option>
+                        <option value="KE" data-dial="+254">Kenya (KE / +254)</option>
+                        <option value="MY" data-dial="+60">Malaysia (MY / +60)</option>
+                        <option value="MX" data-dial="+52">Mexico (MX / +52)</option>
+                        <option value="MA" data-dial="+212">Morocco (MA / +212)</option>
+                        <option value="MM" data-dial="+95">Myanmar (MM / +95)</option>
+                        <option value="NP" data-dial="+977">Nepal (NP / +977)</option>
+                        <option value="NL" data-dial="+31">Netherlands (NL / +31)</option>
+                        <option value="NZ" data-dial="+64">New Zealand (NZ / +64)</option>
+                        <option value="NG" data-dial="+234">Nigeria (NG / +234)</option>
+                        <option value="PK" data-dial="+92">Pakistan (PK / +92)</option>
+                        <option value="PE" data-dial="+51">Peru (PE / +51)</option>
+                        <option value="PH" data-dial="+63">Philippines (PH / +63)</option>
+                        <option value="PL" data-dial="+48">Poland (PL / +48)</option>
+                        <option value="RU" data-dial="+7">Russia (RU / +7)</option>
+                        <option value="SA" data-dial="+966">Saudi Arabia (SA / +966)</option>
+                        <option value="SN" data-dial="+221">Senegal (SN / +221)</option>
+                        <option value="SG" data-dial="+65">Singapore (SG / +65)</option>
+                        <option value="ZA" data-dial="+27">South Africa (ZA / +27)</option>
+                        <option value="KR" data-dial="+82" selected>South Korea (KR / +82)</option>
+                        <option value="ES" data-dial="+34">Spain (ES / +34)</option>
+                        <option value="LK" data-dial="+94">Sri Lanka (LK / +94)</option>
+                        <option value="TZ" data-dial="+255">Tanzania (TZ / +255)</option>
+                        <option value="TH" data-dial="+66">Thailand (TH / +66)</option>
+                        <option value="TR" data-dial="+90">Turkey (TR / +90)</option>
+                        <option value="UG" data-dial="+256">Uganda (UG / +256)</option>
+                        <option value="UA" data-dial="+380">Ukraine (UA / +380)</option>
+                        <option value="AE" data-dial="+971">United Arab Emirates (AE / +971)</option>
+                        <option value="GB" data-dial="+44">United Kingdom (GB / +44)</option>
+                        <option value="US" data-dial="+1">United States (US / +1)</option>
+                        <option value="VN" data-dial="+84">Vietnam (VN / +84)</option>
+                        <option value="ZM" data-dial="+260">Zambia (ZM / +260)</option>
+                        <option value="ZW" data-dial="+263">Zimbabwe (ZW / +263)</option>
+                    </select>
+                </div>
+                <div>
+                    <h3 class="section-title">06. GENDER</h3>
+                    <div class="flex gap-4 mt-2">
+                        <label class="text-[10px] flex items-center gap-1 font-black cursor-pointer">
+                            <input type="radio" name="gender" value="male" checked class="w-3 h-3 accent-black"> MALE
+                        </label>
+                        <label class="text-[10px] flex items-center gap-1 font-black cursor-pointer">
+                            <input type="radio" name="gender" value="female" class="w-3 h-3 accent-black"> FEMALE
+                        </label>
                     </div>
                 </div>
-                <div class="p-2.5 border-2 border-black bg-gray-50">
-                    <span class="block text-[11px] font-black mb-2 text-blue-600">HORIZONTAL (16:9) - MAIN VIDEO</span>
-                    <div class="flex flex-wrap gap-2 text-[10px] font-black">
-                        <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="youtube" class="platform-checkbox"> YOUTUBE</label>
-                        <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="x" class="platform-checkbox"> X (TWITTER)</label>
+            </section>
+
+            <!-- 06. TARGET PLATFORMS -->
+            <section>
+                <h3 class="section-title">07. TARGET PLATFORMS (BASE $0.50 + $0.10/EA)</h3>
+                <div class="space-y-3">
+                    <!-- Vertical Group -->
+                    <div class="p-3 border-2 border-black bg-gray-50">
+                        <span class="block text-xs font-black mb-2 text-rose-600">VERTICAL (9:16) - SHORT FORM</span>
+                        <div class="flex flex-wrap gap-2 text-[10px] font-black">
+                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
+                                <input type="checkbox" name="platform" value="tiktok" checked class="accent-black platform-checkbox"> TIKTOK ($0.10)
+                            </label>
+                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
+                                <input type="checkbox" name="platform" value="shorts" checked class="accent-black platform-checkbox"> SHORTS ($0.10)
+                            </label>
+                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
+                                <input type="checkbox" name="platform" value="reels" class="accent-black platform-checkbox"> REELS ($0.10)
+                            </label>
+                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
+                                <input type="checkbox" name="platform" value="snapchat" class="accent-black platform-checkbox"> SNAPCHAT ($0.10)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Horizontal Group -->
+                    <div class="p-3 border-2 border-black bg-gray-50">
+                        <span class="block text-xs font-black mb-2 text-blue-600">HORIZONTAL (16:9) - MAIN VIDEO</span>
+                        <div class="flex flex-wrap gap-2 text-[10px] font-black">
+                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
+                                <input type="checkbox" name="platform" value="youtube" class="accent-black platform-checkbox"> YOUTUBE ($0.10)
+                            </label>
+                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white">
+                                <input type="checkbox" name="platform" value="x" class="accent-black platform-checkbox"> X (TWITTER) ($0.10)
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- 07. COPYRIGHT PROTECTION -->
-        <section class="p-3 bg-black text-white">
-            <h3 class="text-[10px] font-black mb-1 uppercase tracking-tighter">07. COPYRIGHT PROTECTION</h3>
-            <label class="flex items-center gap-2.5 text-[9px] cursor-pointer font-bold leading-tight">
-                <input type="checkbox" id="copyright" checked class="w-3.5 h-3.5 accent-white"> Embed On-chain TxID to protect your copyright permanently via Pi Governance.
-            </label>
-        </section>
+            <!-- 08. COPYRIGHT -->
+            <section class="p-4 bg-black text-white">
+                <h3 class="text-[11px] font-black mb-1 uppercase tracking-tighter">08. COPYRIGHT PROTECTION</h3>
+                <label class="flex items-center gap-3 text-[9px] cursor-pointer font-bold leading-tight">
+                    <input type="checkbox" id="copyright" checked class="w-4 h-4 accent-white">
+                    Embed On-chain TxID to protect your copyright permanently via Pi Governance.
+                </label>
+            </section>
 
-        <!-- SUBMIT & COST DISPLAY -->
-        <div class="pt-3 border-t-4 border-black">
-            <div class="bg-gray-100 p-2.5 border-2 border-black mb-3 space-y-1">
-                <div class="flex justify-between text-xs font-black">
-                    <span>USD EQUIVALENT:</span>
-                    <span id="usdTotal">$0.70 USD</span>
+            <!-- SUBMIT & COST -->
+            <div class="pt-4 border-t-4 border-black">
+                <div class="flex justify-between items-center text-xs font-black mb-4">
+                    <span>FACTORY WHOLESALE COST</span>
+                    <span id="totalCost" class="text-indigo-600 text-lg">$0.70 (USD)</span>
                 </div>
-                <div class="flex justify-between text-sm font-black text-indigo-600">
-                    <span>FINAL SETTLEMENT (PI):</span>
-                    <span id="piTotal">Calculating Pi...</span>
-                </div>
-                <div class="pt-1.5 border-t border-gray-300 flex justify-between text-[9px] font-bold text-gray-600">
-                    <span>APPLIED PI RATE:</span>
-                    <span id="appliedRateText" class="font-mono">1 Pi = $0.0751 USD (n8n Sync)</span>
-                </div>
+                <button onclick="submitOrder()" id="submitBtn" class="w-full bg-black text-white font-black py-5 text-sm hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
+                    [ SUBMIT & START AI FACTORY ]
+                </button>
             </div>
-            <button onclick="submitOrder()" id="submitBtn" class="w-full bg-black text-white font-black py-4 text-xs hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
-                [ SUBMIT & START AI FACTORY ]
-            </button>
         </div>
     </div>
-</div>
 
-<script>
-    let tg = window.Telegram.WebApp;
-    tg.expand();
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
 
-    let isSubmitting = false;
-    let currentPiPriceUsd = 0.0751; 
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('price')) {
-        const passedPrice = parseFloat(urlParams.get('price'));
-        if (!isNaN(passedPrice) && passedPrice > 0) {
-            currentPiPriceUsd = passedPrice;
+        function toggleOrderType(type) {
+            const revContainer = document.getElementById('revision-container');
+            if (type === 'REV') {
+                revContainer.classList.remove('hidden');
+            } else {
+                revContainer.classList.add('hidden');
+            }
+            updateTotalCost();
         }
-    }
-    updateTotalCost();
 
-    function toggleOrderType(type) {
-        const revContainer = document.getElementById('revision-container');
-        if (type === 'REV') {
-            revContainer.classList.remove('hidden');
-        } else {
-            revContainer.classList.add('hidden');
+        function updateTotalCost() {
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const totalCostEl = document.getElementById('totalCost');
+            
+            if (orderType === 'REV') {
+                totalCostEl.innerText = `0.51 Pi (0.50 Pi + 0.01 Tx Fee)`;
+            } else {
+                const checkedPlatforms = document.querySelectorAll('input[name="platform"]:checked');
+                const baseCost = 0.50;
+                const perPlatformCost = 0.10;
+                const total = baseCost + (checkedPlatforms.length * perPlatformCost);
+                totalCostEl.innerText = `$${total.toFixed(2)} (USD Equivalent Pi)`;
+            }
         }
+
+        document.querySelectorAll('input[name="platform"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateTotalCost);
+        });
+
         updateTotalCost();
-    }
 
-    function updateTotalCost() {
-        const orderType = document.querySelector('input[name="order_type"]:checked').value;
-        let usdAmount = 0.50; 
+        function submitOrder() {
+            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const parentTxId = document.getElementById('parentTxId').value;
 
-        if (orderType === 'REV') {
-            usdAmount = 0.05; 
-        } else {
-            const checkedPlatforms = document.querySelectorAll('input[name="platform"]:checked');
-            usdAmount = 0.50 + (checkedPlatforms.length * 0.10);
+            if (orderType === 'REV' && !parentTxId.trim()) {
+                alert("Please enter or select the Target Parent Tx ID for revision!");
+                document.getElementById('parentTxId').focus();
+                return;
+            }
+
+            const countrySelect = document.getElementById('country');
+            if (!countrySelect.value) {
+                alert("Please select a Region!");
+                countrySelect.focus();
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "ENCRYPTING & SENDING... 🚀";
+            btn.disabled = true;
+
+            const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
+            const videoFileName = document.getElementById('videoFile').files.length > 0 ? document.getElementById('videoFile').files[0].name : "No video selected";
+            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+
+            const data = {
+                action: "PIONEER_ORDER",
+                order_type: orderType,
+                parent_tx_id: orderType === 'REV' ? parentTxId : null,
+                video_file_name: videoFileName,
+                subtitle: document.getElementById('subtitle').value,
+                prompt: document.getElementById('prompt').value,
+                country_code: countrySelect.value,
+                country_dial: selectedOption.getAttribute('data-dial'),
+                country_display: selectedOption.text,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                platforms: platforms,
+                copyright: document.getElementById('copyright').checked
+            };
+
+            if (tg && tg.sendData) {
+                tg.sendData(JSON.stringify(data));
+            } else {
+                console.log("Mock Submit Data:", data);
+                alert(`Order data generated successfully! Type: ${orderType} (Check console)`);
+                setTimeout(() => {
+                    btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                    btn.disabled = false;
+                }, 2000);
+            }
         }
-
-        const totalUsdWithFee = usdAmount * 1.05;
-        const estimatedPi = totalUsdWithFee / currentPiPriceUsd;
-
-        document.getElementById('usdTotal').innerText = `$${totalUsdWithFee.toFixed(2)} USD (incl. 5% fee)`;
-        document.getElementById('piTotal').innerText = `≈ ${estimatedPi.toFixed(2)} Pi`;
-        document.getElementById('appliedRateText').innerText = `1 Pi = $${currentPiPriceUsd.toFixed(4)} USD (n8n Sync)`;
-    }
-
-    document.querySelectorAll('input[name="platform"]').forEach(checkbox => {
-        checkbox.addEventListener('change', updateTotalCost);
-    });
-
-    function submitOrder() {
-        if (isSubmitting) return;
-
-        const countrySelect = document.getElementById('country');
-        if (!countrySelect.value) {
-            alert("Please select a Region!");
-            countrySelect.focus();
-            return;
-        }
-
-        const orderType = document.querySelector('input[name="order_type"]:checked').value;
-        const parentTxId = document.getElementById('parentTxId').value;
-
-        if (orderType === 'REV' && !parentTxId.trim()) {
-            alert("Please enter your previous OTP reference!");
-            document.getElementById('parentTxId').focus();
-            return;
-        }
-
-        isSubmitting = true;
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = "ENCRYPTING & SENDING... 🚀";
-        btn.disabled = true;
-
-        const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
-        const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-
-        const data = {
-            action: "PIONEER_ORDER",
-            order_type: orderType,
-            parent_tx_id: orderType === 'REV' ? parentTxId : null,
-            subtitle: document.getElementById('subtitle').value,
-            prompt: document.getElementById('prompt').value,
-            country_code: countrySelect.value,
-            country_dial: selectedOption.getAttribute('data-dial'),
-            country_display: selectedOption.text,
-            gender: document.querySelector('input[name="gender"]:checked').value,
-            platforms: platforms,
-            copyright: document.getElementById('copyright').checked,
-            calculated_pi_price: currentPiPriceUsd
-        };
-
-        if (tg && tg.sendData) {
-            tg.sendData(JSON.stringify(data));
-            setTimeout(() => {
-                try { tg.close(); } catch(e) {}
-            }, 3000);
-        } else {
-            alert(`[Mock Submit] Order sent successfully!`);
-            setTimeout(() => {
-                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
-                btn.disabled = false;
-                isSubmitting = false;
-            }, 3000);
-        }
-    }
-</script>
-
+    </script>
 </body>
 </html>
