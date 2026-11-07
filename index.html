@@ -11,14 +11,17 @@
             background-color: #f8fafc;
             color: #1e293b;
             font-family: 'Courier New', Courier, monospace;
-            padding: 15px;
+            padding: 8px; /* 모바일 좌우 여백 최적화 */
+            margin: 0;
         }
         .form-border {
-            border: 3px solid #000;
-            padding: 24px;
+            border: 2px solid #000;
+            padding: 16px; /* 모바일에서 답답하지 않도록 패딩 슬림화 */
             background: #ffffff;
             position: relative;
-            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.1);
+            box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
         }
         .form-border::after {
             content: "OFFICIAL DOCUMENT";
@@ -26,7 +29,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-30deg);
-            font-size: 40px;
+            font-size: 30px;
             color: rgba(0, 0, 0, 0.03);
             pointer-events: none;
             white-space: nowrap;
@@ -34,21 +37,21 @@
         .input-underline {
             border-bottom: 2px solid #000;
             width: 100%;
-            padding: 10px 0;
+            padding: 8px 0;
             background: transparent;
             outline: none;
             font-weight: bold;
         }
         .section-title {
             font-weight: 900;
-            font-size: 14px;
+            font-size: 13px;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             border-left: 4px solid #000;
-            padding-left: 8px;
+            padding-left: 6px;
         }
         select {
             -webkit-appearance: none;
@@ -63,34 +66,30 @@
 <body class="antialiased">
     <div class="form-border">
         <!-- HEADER -->
-        <div class="text-center border-b-4 border-black pb-4 mb-6">
-            <h1 class="text-2xl font-black tracking-tighter uppercase">[ DREAMFACTORY EDIT ]</h1>
-            <div class="flex justify-between items-center mt-2 px-1 text-[9px] font-bold text-gray-500">
+        <div class="text-center border-b-4 border-black pb-3 mb-4">
+            <h1 class="text-xl font-black tracking-tighter uppercase">[ DREAMFACTORY EDIT ]</h1>
+            <div class="flex justify-between items-center mt-1 px-1 text-[8px] font-bold text-gray-500">
                 <span>REF: DREAMFACTORY-EDITION-2026</span>
                 <span>TYPE: GOVERNANCE ASSET</span>
             </div>
         </div>
 
-        <!-- 🛡️ 원본 검은 박스 경고문구 유지 -->
-        <div class="p-3 bg-black text-white border-2 border-black mb-6">
+        <!-- 🛡️ 경고문구 -->
+        <div class="p-2.5 bg-black text-white border-2 border-black mb-4">
             <div class="flex items-center gap-2">
-                <span class="text-lg">🗣️</span>
+                <span class="text-base">🗣️</span>
                 <div>
-                    <p class="text-xs font-black tracking-wide uppercase text-yellow-400">
-                        SPEAK YOUR NATIVE LANGUAGE!
-                    </p>
-                    <p class="text-[9px] font-bold text-gray-300 leading-tight mt-0.5">
-                        CRITICAL: NEVER INCLUDE SECRETS OR PRIVATE PHRASES UNDER ANY CIRCUMSTANCES! Feel free to write in your native language.
-                    </p>
+                    <p class="text-[11px] font-black tracking-wide uppercase text-yellow-400">SPEAK YOUR NATIVE LANGUAGE!</p>
+                    <p class="text-[8px] font-bold text-gray-300 leading-tight mt-0.5">CRITICAL: NEVER INCLUDE SECRETS OR PRIVATE PHRASES UNDER ANY CIRCUMSTANCES! Feel free to write in your native language.</p>
                 </div>
             </div>
         </div>
 
-        <div class="space-y-8">
+        <div class="space-y-6">
             <!-- 00. ORDER TYPE -->
-            <section class="p-4 bg-amber-50 border-2 border-black">
+            <section class="p-3 bg-amber-50 border-2 border-black">
                 <h3 class="section-title text-amber-800 border-amber-800">00. SELECT ORDER TYPE</h3>
-                <div class="flex flex-col sm:flex-row gap-4 mt-3 mb-2">
+                <div class="flex flex-col gap-2 mt-2 mb-2">
                     <label class="flex items-center gap-2 cursor-pointer text-xs font-black">
                         <input type="radio" name="order_type" value="NEW" checked onclick="toggleOrderType('NEW')" class="accent-black w-4 h-4">
                         <span>NEW ORDER (Base $0.50 + $0.10/EA + 5% Fee)</span>
@@ -100,8 +99,7 @@
                         <span>REVISION ($0.05 USD + 5% Fee)</span>
                     </label>
                 </div>
-
-                <div id="revision-container" class="hidden mt-3 pt-3 border-t-2 border-black">
+                <div id="revision-container" class="hidden mt-2 pt-2 border-t-2 border-black">
                     <label class="block text-[10px] font-black text-indigo-700 mb-1 uppercase">Enter Previous OTP / Reference:</label>
                     <input type="text" id="parentTxId" placeholder="e.g., DFOTP-9821" class="w-full bg-white border-2 border-black p-2 text-xs font-mono font-bold uppercase">
                 </div>
@@ -110,16 +108,16 @@
             <!-- 01. SCREEN SUBTITLE -->
             <section>
                 <h3 class="section-title">01. SCREEN SUBTITLE</h3>
-                <input type="text" id="subtitle" class="input-underline text-sm uppercase" placeholder="Text to be burned on video (e.g. BREAKING NEWS)">
+                <input type="text" id="subtitle" class="input-underline text-xs uppercase" placeholder="Text to be burned on video (e.g. BREAKING NEWS)">
             </section>
 
             <!-- 02. CUSTOM BGM AUDIO -->
             <section>
                 <h3 class="section-title text-emerald-700 border-emerald-700">02. CUSTOM BGM AUDIO</h3>
-                <div class="p-3 bg-gray-50 border-2 border-black">
+                <div class="p-2.5 bg-gray-50 border-2 border-black">
                     <p class="text-[9px] font-bold text-gray-500 mb-2">Please select background music (MP3) for your video.</p>
-                    <input type="file" id="bgmFile" accept="audio/*" class="text-xs font-bold w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-black file:bg-black file:text-white hover:file:bg-zinc-800">
-                    <p class="text-[10px] font-black text-red-600 mt-3 leading-tight tracking-tighter">
+                    <input type="file" id="bgmFile" accept="audio/*" class="text-[10px] font-bold w-full cursor-pointer file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-[9px] file:font-black file:bg-black file:text-white hover:file:bg-zinc-800">
+                    <p class="text-[9px] font-black text-red-600 mt-2 leading-tight tracking-tighter">
                         ⚠️ ATTENTION: After submitting this form, you MUST upload the selected BGM file to the Telegram chat. Our rendering server needs it to process your video.
                     </p>
                 </div>
@@ -129,14 +127,14 @@
             <section>
                 <h3 class="section-title text-indigo-700 border-indigo-700">03. EDITING DIRECTION</h3>
                 <p class="text-[9px] font-bold text-gray-500 mb-2">Describe your desired editing style, mood, or specific effects in detail.</p>
-                <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-2 border-black p-3 text-sm font-bold outline-none resize-none placeholder-gray-400" placeholder="e.g., Cinematic lighting, epic mood, stormy background, make the spear tip shine sharply."></textarea>
+                <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-2 border-black p-2.5 text-xs font-bold outline-none resize-none placeholder-gray-400" placeholder="e.g., Cinematic lighting, epic mood, stormy background, make the spear tip shine sharply."></textarea>
             </section>
 
             <!-- 04. REGION & GENDER -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <section class="space-y-4">
                 <div>
                     <h3 class="section-title">04. REGION</h3>
-                    <select id="country" class="input-underline text-sm cursor-pointer font-bold">
+                    <select id="country" class="input-underline text-xs cursor-pointer font-bold">
                         <option value="" disabled selected>Select Region...</option>
                         <option value="AF" data-dial="+93">Afghanistan (AF / +93)</option>
                         <option value="AL" data-dial="+355">Albania (AL / +355)</option>
@@ -203,8 +201,8 @@
                 <div>
                     <h3 class="section-title">05. GENDER</h3>
                     <div class="flex gap-4 mt-2">
-                        <label class="text-[10px] flex items-center gap-1 font-black cursor-pointer"><input type="radio" name="gender" value="male" checked class="w-3 h-3 accent-black"> MALE</label>
-                        <label class="text-[10px] flex items-center gap-1 font-black cursor-pointer"><input type="radio" name="gender" value="female" class="w-3 h-3 accent-black"> FEMALE</label>
+                        <label class="text-xs flex items-center gap-1 font-black cursor-pointer"><input type="radio" name="gender" value="male" checked class="w-3 h-3 accent-black"> MALE</label>
+                        <label class="text-xs flex items-center gap-1 font-black cursor-pointer"><input type="radio" name="gender" value="female" class="w-3 h-3 accent-black"> FEMALE</label>
                     </div>
                 </div>
             </section>
@@ -212,38 +210,37 @@
             <!-- 06. TARGET PLATFORMS -->
             <section>
                 <h3 class="section-title">06. TARGET PLATFORMS (RATIO)</h3>
-                <div class="space-y-3">
-                    <div class="p-3 border-2 border-black bg-gray-50">
-                        <span class="block text-xs font-black mb-2 text-rose-600">VERTICAL (9:16) - SHORT FORM</span>
+                <div class="space-y-2.5">
+                    <div class="p-2.5 border-2 border-black bg-gray-50">
+                        <span class="block text-[11px] font-black mb-2 text-rose-600">VERTICAL (9:16) - SHORT FORM</span>
                         <div class="flex flex-wrap gap-2 text-[10px] font-black">
-                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="tiktok" checked class="accent-black platform-checkbox"> TIKTOK</label>
-                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="shorts" checked class="accent-black platform-checkbox"> SHORTS</label>
-                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="reels" class="platform-checkbox"> REELS</label>
-                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="snapchat" class="platform-checkbox"> SNAPCHAT</label>
+                            <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="tiktok" checked class="accent-black platform-checkbox"> TIKTOK</label>
+                            <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="shorts" checked class="accent-black platform-checkbox"> SHORTS</label>
+                            <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="reels" class="platform-checkbox"> REELS</label>
+                            <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="snapchat" class="platform-checkbox"> SNAPCHAT</label>
                         </div>
                     </div>
-                    <div class="p-3 border-2 border-black bg-gray-50">
-                        <span class="block text-xs font-black mb-2 text-blue-600">HORIZONTAL (16:9) - MAIN VIDEO</span>
+                    <div class="p-2.5 border-2 border-black bg-gray-50">
+                        <span class="block text-[11px] font-black mb-2 text-blue-600">HORIZONTAL (16:9) - MAIN VIDEO</span>
                         <div class="flex flex-wrap gap-2 text-[10px] font-black">
-                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="youtube" class="platform-checkbox"> YOUTUBE</label>
-                            <label class="flex items-center gap-2 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="x" class="platform-checkbox"> X (TWITTER)</label>
+                            <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="youtube" class="platform-checkbox"> YOUTUBE</label>
+                            <label class="flex items-center gap-1.5 px-2 py-1 border-2 border-gray-300 hover:border-black cursor-pointer bg-white"><input type="checkbox" name="platform" value="x" class="platform-checkbox"> X (TWITTER)</label>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- 07. COPYRIGHT PROTECTION -->
-            <section class="p-4 bg-black text-white">
-                <h3 class="text-[11px] font-black mb-1 uppercase tracking-tighter">07. COPYRIGHT PROTECTION</h3>
-                <label class="flex items-center gap-3 text-[9px] cursor-pointer font-bold leading-tight">
-                    <input type="checkbox" id="copyright" checked class="w-4 h-4 accent-white">
-                    Embed On-chain TxID to protect your copyright permanently via Pi Governance.
+            <section class="p-3 bg-black text-white">
+                <h3 class="text-[10px] font-black mb-1 uppercase tracking-tighter">07. COPYRIGHT PROTECTION</h3>
+                <label class="flex items-center gap-2.5 text-[9px] cursor-pointer font-bold leading-tight">
+                    <input type="checkbox" id="copyright" checked class="w-3.5 h-3.5 accent-white"> Embed On-chain TxID to protect your copyright permanently via Pi Governance.
                 </label>
             </section>
 
             <!-- SUBMIT & COST DISPLAY -->
-            <div class="pt-4 border-t-4 border-black">
-                <div class="bg-gray-100 p-3 border-2 border-black mb-4 space-y-1">
+            <div class="pt-3 border-t-4 border-black">
+                <div class="bg-gray-100 p-2.5 border-2 border-black mb-3 space-y-1">
                     <div class="flex justify-between text-xs font-black">
                         <span>USD EQUIVALENT:</span>
                         <span id="usdTotal">$0.70 USD</span>
@@ -252,13 +249,12 @@
                         <span>FINAL SETTLEMENT (PI):</span>
                         <span id="piTotal">Calculating Pi...</span>
                     </div>
-                    <!-- n8n 캐시 시세 연동 표시 -->
-                    <div class="pt-2 border-t border-gray-300 flex justify-between text-[10px] font-bold text-gray-600">
+                    <div class="pt-1.5 border-t border-gray-300 flex justify-between text-[9px] font-bold text-gray-600">
                         <span>APPLIED PI RATE:</span>
                         <span id="appliedRateText" class="font-mono">1 Pi = $0.0751 USD (n8n Sync)</span>
                     </div>
                 </div>
-                <button onclick="submitOrder()" id="submitBtn" class="w-full bg-black text-white font-black py-5 text-sm hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
+                <button onclick="submitOrder()" id="submitBtn" class="w-full bg-black text-white font-black py-4 text-xs hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
                     [ SUBMIT & START AI FACTORY ]
                 </button>
             </div>
@@ -268,13 +264,9 @@
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
+        let isSubmitting = false;
 
-        let isSubmitting = false; 
-        
-        // n8n 서버(또는 URL 파라미터)에서 넘어온 실시간 파이 시세 기본값 설정 ($0.0751 또는 기본 fallback)
-        let currentPiPriceUsd = 0.0751; 
-
-        // URL 쿼리스트링(?price=0.0751)으로 n8n이 시세를 꽂아주는 경우 자동 캐치
+        let currentPiPriceUsd = 0.0751;
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('price')) {
             const passedPrice = parseFloat(urlParams.get('price'));
@@ -283,7 +275,6 @@
             }
         }
 
-        // 페이지 로드 직후 지연 없이 즉시 금액 산출
         updateTotalCost();
 
         function toggleOrderType(type) {
@@ -296,19 +287,16 @@
             updateTotalCost();
         }
 
-        // 실시간 달러 및 파이 개수 산출 로직
         function updateTotalCost() {
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
             let usdAmount = 0.50;
-
             if (orderType === 'REV') {
                 usdAmount = 0.05;
             } else {
                 const checkedPlatforms = document.querySelectorAll('input[name="platform"]:checked');
                 usdAmount = 0.50 + (checkedPlatforms.length * 0.10);
             }
-
-            const totalUsdWithFee = usdAmount * 1.05; // 5% 수수료 반영
+            const totalUsdWithFee = usdAmount * 1.05; 
             const estimatedPi = totalUsdWithFee / currentPiPriceUsd;
 
             document.getElementById('usdTotal').innerText = `$${totalUsdWithFee.toFixed(2)} USD (incl. 5% fee)`;
@@ -323,7 +311,6 @@
         function submitOrder() {
             if (isSubmitting) return;
 
-            // Region Validation
             const countrySelect = document.getElementById('country');
             if (!countrySelect.value) {
                 alert("Please select a Region!");
@@ -333,24 +320,20 @@
 
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
             const parentTxId = document.getElementById('parentTxId').value;
-            
             if (orderType === 'REV' && !parentTxId.trim()) {
                 alert("Please enter your previous OTP reference!");
                 document.getElementById('parentTxId').focus();
                 return;
             }
-            
+
             isSubmitting = true;
             const btn = document.getElementById('submitBtn');
             btn.innerText = "ENCRYPTING & SENDING... 🚀";
             btn.disabled = true;
-            
+
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
-            
-            // Extract BGM filename
             const bgmFileInput = document.getElementById('bgmFile');
             const bgmFileName = bgmFileInput.files.length > 0 ? bgmFileInput.files[0].name : "No BGM selected";
-            
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
             const data = {
@@ -368,10 +351,12 @@
                 copyright: document.getElementById('copyright').checked,
                 calculated_pi_price: currentPiPriceUsd
             };
-            
+
             if (tg && tg.sendData) {
                 tg.sendData(JSON.stringify(data));
-                setTimeout(() => { try { tg.close(); } catch(e) {} }, 3000);
+                setTimeout(() => {
+                    try { tg.close(); } catch(e) {}
+                }, 3000);
             } else {
                 alert(`[Mock Submit] Order sent successfully!`);
                 setTimeout(() => {
