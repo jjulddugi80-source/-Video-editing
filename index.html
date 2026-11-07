@@ -263,8 +263,11 @@
     </div>
 
     <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
+        // ① Telegram 초기화 안전 방어 (외부 브라우저 테스트 에러 방지)
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.expand();
+        }
 
         let isSubmitting = false;
         let currentPiPriceUsd = 0.0751;
@@ -337,7 +340,6 @@
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
-            // 🛡️ [순수 주문 데이터 구조] 텔레그램 플랫폼이 chat_id를 책임지므로 폼은 데이터에만 집중합니다.
             const data = {
                 action: "PIONEER_ORDER",
                 order_type: orderType,
@@ -353,13 +355,22 @@
                 calculated_pi_price: currentPiPriceUsd
             };
 
+            const payload = JSON.stringify(data);
+
+            // ③ 데이터 크기 제한 방어 (최대 4096바이트 체크)
+            if (new TextEncoder().encode(payload).length > 4096) {
+                alert("Order data is too large. Please shorten your editing direction.");
+                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                btn.disabled = false;
+                isSubmitting = false;
+                return;
+            }
+
+            // ② 타이머 없는 깔끔한 전송 분기
             if (tg && tg.sendData) {
-                tg.sendData(JSON.stringify(data));
-                setTimeout(() => {
-                    try { tg.close(); } catch(e) {}
-                }, 3000);
+                tg.sendData(payload);
             } else {
-                alert(`[Mock Submit] Order sent successfully!`);
+                alert(`[Mock Submit] Order sent successfully!\n\nPayload:\n${payload}`);
                 setTimeout(() => {
                     btn.innerText = "[ SUBMIT & START AI FACTORY ]";
                     btn.disabled = false;
