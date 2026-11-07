@@ -53,7 +53,6 @@
             border-left: 4px solid #000;
             padding-left: 6px;
         }
-        /* 📱 스마트폰 및 텔레그램 웹뷰에서 국가선택 드롭다운 터치가 확실히 열리도록 설정 */
         select {
             -webkit-appearance: menulist-button;
             -moz-appearance: menulist;
@@ -341,6 +340,7 @@
         const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
         const data = {
+            type: "APP_ORDER", // 👈 n8n 분류기(APP_ORDER)와 다이렉트로 맞물리도록 추가됨
             action: "PIONEER_ORDER",
             order_type: orderType,
             parent_tx_id: orderType === 'REV' ? parentTxId : null,
