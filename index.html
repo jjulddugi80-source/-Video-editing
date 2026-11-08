@@ -11,12 +11,12 @@
             background-color: #f8fafc;
             color: #1e293b;
             font-family: 'Courier New', Courier, monospace;
-            padding: 8px; /* 모바일 좌우 여백 최적화 */
+            padding: 8px;
             margin: 0;
         }
         .form-border {
             border: 2px solid #000;
-            padding: 16px; /* 모바일에서 답답하지 않도록 패딩 슬림화 */
+            padding: 16px;
             background: #ffffff;
             position: relative;
             box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
@@ -234,8 +234,7 @@
             <section class="p-3 bg-black text-white">
                 <h3 class="text-[10px] font-black mb-1 uppercase tracking-tighter">07. COPYRIGHT PROTECTION</h3>
                 <label class="flex items-center gap-2.5 text-[9px] cursor-pointer font-bold leading-tight">
-                    <input type="checkbox" id="copyright" checked class="w-3.5 h-3.5 accent-white">
-                    Embed On-chain TxID to protect your copyright permanently via Pi Governance.
+                    <input type="checkbox" id="copyright" checked class="w-3.5 h-3.5 accent-white"> Embed On-chain TxID to protect your copyright permanently via Pi Governance.
                 </label>
             </section>
 
@@ -263,11 +262,8 @@
     </div>
 
     <script>
-        // ① Telegram 초기화 안전 방어 (외부 브라우저 테스트 에러 방지)
         const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.expand();
-        }
+        if (tg) { tg.expand(); }
 
         let isSubmitting = false;
         let currentPiPriceUsd = 0.0751;
@@ -293,15 +289,13 @@
 
         function updateTotalCost() {
             const orderType = document.querySelector('input[name="order_type"]:checked').value;
-            let usdAmount = 0.50; 
-
+            let usdAmount = 0.50;
             if (orderType === 'REV') {
-                usdAmount = 0.05; 
+                usdAmount = 0.05;
             } else {
                 const checkedPlatforms = document.querySelectorAll('input[name="platform"]:checked');
                 usdAmount = 0.50 + (checkedPlatforms.length * 0.10);
             }
-
             const totalUsdWithFee = usdAmount * 1.05;
             const estimatedPi = totalUsdWithFee / currentPiPriceUsd;
 
@@ -357,7 +351,6 @@
 
             const payload = JSON.stringify(data);
 
-            // ③ 데이터 크기 제한 방어 (최대 4096바이트 체크)
             if (new TextEncoder().encode(payload).length > 4096) {
                 alert("Order data is too large. Please shorten your editing direction.");
                 btn.innerText = "[ SUBMIT & START AI FACTORY ]";
@@ -366,18 +359,17 @@
                 return;
             }
 
-            // ② 전송 후 확실하게 폼 창을 닫아주는 안전장치 적용
             if (tg && typeof tg.sendData === "function") {
                 try {
                     console.log("전송 데이터:", payload);
-console.log("전송 바이트:", new TextEncoder().encode(payload).length);
-
+                    console.log("전송 바이트:", new TextEncoder().encode(payload).length);
                     
-                    // 0.5초 뒤 폼 창을 강제로 닫아버려 전송 중 멈춤 현상을 원천 차단합니다!
+                    // 🚀 텔레그램 서버로 데이터를 실제로 쏘아주는 핵심 코드 추가 완료!
+                    tg.sendData(payload);
+
                     setTimeout(() => {
                         try { tg.close(); } catch (e) {}
                     }, 500);
-
                 } catch (error) {
                     alert("전송 중 오류가 발생했습니다.");
                     btn.innerText = "[ SUBMIT & START AI FACTORY ]";
