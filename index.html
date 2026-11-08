@@ -364,11 +364,9 @@
                     console.log("전송 데이터:", payload);
                     console.log("전송 바이트:", new TextEncoder().encode(payload).length);
                     
-                    tg.sendData(payload);
-
-                    setTimeout(() => {
-                        try { tg.close(); } catch (e) {}
-                    }, 500);
+                    tg.ready();
+tg.expand();
+tg.sendData(payload);
                 } catch (error) {
                     alert("전송 중 오류가 발생했습니다.");
                     btn.innerText = "[ SUBMIT & START AI FACTORY ]";
