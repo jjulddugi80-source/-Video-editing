@@ -369,7 +369,9 @@
             // ② 전송 후 확실하게 폼 창을 닫아주는 안전장치 적용
             if (tg && typeof tg.sendData === "function") {
                 try {
-                    tg.sendData(payload);
+                    console.log("전송 데이터:", payload);
+console.log("전송 바이트:", new TextEncoder().encode(payload).length);
+
                     
                     // 0.5초 뒤 폼 창을 강제로 닫아버려 전송 중 멈춤 현상을 원천 차단합니다!
                     setTimeout(() => {
