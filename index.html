@@ -263,7 +263,10 @@
 
     <script>
         const tg = window.Telegram?.WebApp;
-        if (tg) { tg.expand(); }
+        if (tg) { 
+            tg.ready();
+            tg.expand(); 
+        }
 
         let isSubmitting = false;
         let currentPiPriceUsd = 0.0751;
@@ -308,7 +311,8 @@
             checkbox.addEventListener('change', updateTotalCost);
         });
 
-        function submitOrder() {
+        // 🚀 n8n 웹훅 직통 전송 함수
+        async function submitOrder() {
             if (isSubmitting) return;
 
             const countrySelect = document.getElementById('country');
@@ -334,8 +338,15 @@
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
+            // 텔레그램 유저 정보 추출 (메뉴 버튼 진입 시에도 안전하게 확보)
+            const user = tg?.initDataUnsafe?.user || {};
+
             const data = {
                 action: "PIONEER_ORDER",
+                telegram_id: user.id || 'unknown',
+                username: user.username || 'unknown',
+                first_name: user.first_name || '',
+                last_name: user.last_name || '',
                 order_type: orderType,
                 parent_tx_id: orderType === 'REV' ? parentTxId : null,
                 subtitle: document.getElementById('subtitle').value,
@@ -346,40 +357,36 @@
                 gender: document.querySelector('input[name="gender"]:checked').value,
                 platforms: platforms,
                 copyright: document.getElementById('copyright').checked,
-                calculated_pi_price: currentPiPriceUsd
+                calculated_pi_price: currentPiPriceUsd,
+                timestamp: new Date().toISOString()
             };
 
-            const payload = JSON.stringify(data);
+            const webhookUrl = "https://obvious-praise-contractors-gifts.trycloudflare.com/webhook/pioneer-order";
 
-            if (new TextEncoder().encode(payload).length > 4096) {
-                alert("Order data is too large. Please shorten your editing direction.");
-                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
-                btn.disabled = false;
-                isSubmitting = false;
-                return;
-            }
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
 
-            if (tg && typeof tg.sendData === "function") {
-                try {
-                    console.log("전송 데이터:", payload);
-                    console.log("전송 바이트:", new TextEncoder().encode(payload).length);
-                    
-                    tg.ready();
-tg.expand();
-tg.sendData(payload);
-                } catch (error) {
-                    alert("전송 중 오류가 발생했습니다.");
+                if (response.ok) {
+                    alert("🚀 주문이 성공적으로 접수되었습니다! 텔레그램 창으로 돌아가 파일(영상/음악)을 업로드해주세요.");
+                    if (tg) tg.close(); // 미니앱 닫기
+                } else {
+                    alert("⚠️ 전송 실패: 서버 응답을 확인해주세요.");
                     btn.innerText = "[ SUBMIT & START AI FACTORY ]";
                     btn.disabled = false;
                     isSubmitting = false;
                 }
-            } else {
-                alert(`[Mock Submit] Order sent successfully!\n\nPayload:\n${payload}`);
-                setTimeout(() => {
-                    btn.innerText = "[ SUBMIT & START AI FACTORY ]";
-                    btn.disabled = false;
-                    isSubmitting = false;
-                }, 3000);
+            } catch (error) {
+                console.error("Error:", error);
+                alert("⚠️ 통신 에러가 발생했습니다. 네트워크 연결을 확인해주세요.");
+                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                btn.disabled = false;
+                isSubmitting = false;
             }
         }
     </script>
