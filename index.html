@@ -311,8 +311,8 @@
             checkbox.addEventListener('change', updateTotalCost);
         });
 
-        // 🚀 ngrok 웹훅 직통 전송 함수
-        async function submitOrder() {
+        // 🚀 통신 에러 원천 차단: 텔레그램 네이티브 sendData 방식 사용
+        function submitOrder() {
             if (isSubmitting) return;
 
             const countrySelect = document.getElementById('country');
@@ -332,20 +332,14 @@
 
             isSubmitting = true;
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "ENCRYPTING & SENDING... 🚀";
+            btn.innerText = "SENDING TO TELEGRAM... 🚀";
             btn.disabled = true;
 
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
-            const user = tg?.initDataUnsafe?.user || {};
-
             const data = {
                 action: "PIONEER_ORDER",
-                telegram_id: user.id || 'unknown',
-                username: user.username || 'unknown',
-                first_name: user.first_name || '',
-                last_name: user.last_name || '',
                 order_type: orderType,
                 parent_tx_id: orderType === 'REV' ? parentTxId : null,
                 subtitle: document.getElementById('subtitle').value,
@@ -360,32 +354,32 @@
                 timestamp: new Date().toISOString()
             };
 
-            const webhookUrl = "https://subarcuated-elissa-nonrurally.ngrok-free.app/webhook/pioneer-order";
+            const payload = JSON.stringify(data);
 
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
+            if (new TextEncoder().encode(payload).length > 4096) {
+                alert("Order data is too large. Please shorten your editing direction.");
+                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                btn.disabled = false;
+                isSubmitting = false;
+                return;
+            }
 
-                if (response.ok) {
-                    alert("🚀 주문이 성공적으로 접수되었습니다! 텔레그램 창으로 돌아가 파일(영상/음악)을 업로드해주세요.");
-                    if (tg) tg.close();
-                } else {
-                    alert("⚠️ 전송 실패: 서버 응답을 확인해주세요.");
+            if (tg && typeof tg.sendData === "function") {
+                try {
+                    tg.sendData(payload);
+                } catch (error) {
+                    alert("전송 중 오류가 발생했습니다.");
                     btn.innerText = "[ SUBMIT & START AI FACTORY ]";
                     btn.disabled = false;
                     isSubmitting = false;
                 }
-            } catch (error) {
-                console.error("Error:", error);
-                alert("⚠️ 통신 에러가 발생했습니다. 네트워크 연결을 확인해주세요.");
-                btn.innerText = "[ SUBMIT & START AI FACTORY ]";
-                btn.disabled = false;
-                isSubmitting = false;
+            } else {
+                alert(`[Mock Submit] Order sent successfully!\n\nPayload:\n${payload}`);
+                setTimeout(() => {
+                    btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                    btn.disabled = false;
+                    isSubmitting = false;
+                }, 3000);
             }
         }
     </script>
