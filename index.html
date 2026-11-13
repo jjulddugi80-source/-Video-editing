@@ -311,7 +311,7 @@
             checkbox.addEventListener('change', updateTotalCost);
         });
 
-        // 🚀 클라우드플레어 웹훅 직통 fetch 전송 방식
+        // 🚀 챗아이디 자동 추출 및 전송 함수 (에러 방어 포함)
         async function submitOrder() {
             if (isSubmitting) return;
 
@@ -338,14 +338,33 @@
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
-            const user = tg?.initDataUnsafe?.user || {};
+            // 💡 텔레그램 웹앱 객체에서 고유 챗아이디 안전하게 추출
+            let chatId = null;
+            let username = 'unknown';
+            let firstName = '';
+            let lastName = '';
+
+            try {
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+                    const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+                    if (tgUser && tgUser.id) {
+                        chatId = tgUser.id;
+                        username = tgUser.username || 'unknown';
+                        firstName = tgUser.first_name || '';
+                        lastName = tgUser.last_name || '';
+                    }
+                }
+            } catch (e) {
+                console.log("Telegram WebApp context not found.");
+            }
 
             const data = {
                 action: "PIONEER_ORDER",
-                telegram_id: user.id || 'unknown',
-                username: user.username || 'unknown',
-                first_name: user.first_name || '',
-                last_name: user.last_name || '',
+                chat_id: chatId, // <-- 🎯 n8n 텔레그램 전송 노드의 'chat not found' 에러를 막는 핵심 필드
+                telegram_id: chatId || 'unknown',
+                username: username,
+                first_name: firstName,
+                last_name: lastName,
                 order_type: orderType,
                 parent_tx_id: orderType === 'REV' ? parentTxId : null,
                 subtitle: document.getElementById('subtitle').value,
@@ -355,7 +374,7 @@
                 country_display: selectedOption.text,
                 gender: document.querySelector('input[name="gender"]:checked').value,
                 platforms: platforms,
-                copyright: document.getElementById('copyright').checked,
+                copyright: document.getElementById('copyright'].checked,
                 calculated_pi_price: currentPiPriceUsd,
                 timestamp: new Date().toISOString()
             };
@@ -372,7 +391,9 @@
 
                 if (response.ok) {
                     alert("🚀 주문이 성공적으로 접수되었습니다! 텔레그램 창으로 돌아가 파일(영상/음악)을 업로드해주세요.");
-                    
+                    if (window.Telegram?.WebApp?.close) {
+                        window.Telegram.WebApp.close();
+                    }
                 } else {
                     alert("⚠️ 전송 실패: 서버 응답을 확인해주세요.");
                     btn.innerText = "[ SUBMIT & START AI FACTORY ]";
