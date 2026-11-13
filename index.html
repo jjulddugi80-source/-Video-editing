@@ -351,35 +351,42 @@
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
-            // 🎯 텔레그램 미니앱 고유 챗아이디 안전 수집
+            // 🎯 [핵심 완벽 방어] 텔레그램 웹앱 객체 및 URL 파라미터에서 챗아이디 추출
             let chatId = null;
             let username = 'unknown';
             let firstName = '';
             let lastName = '';
 
             try {
-                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
-                    const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
-                    if (tgUser && tgUser.id) {
-                        chatId = tgUser.id;
-                        username = tgUser.username || 'unknown';
-                        firstName = tgUser.first_name || '';
-                        lastName = tgUser.last_name || '';
+                // 1순위: 공식 텔레그램 웹앱 객체
+                if (window.Telegram && window.Telegram.WebApp) {
+                    const tg = window.Telegram.WebApp;
+                    if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+                        chatId = tg.initDataUnsafe.user.id;
+                        username = tg.initDataUnsafe.user.username || 'unknown';
+                        firstName = tg.initDataUnsafe.user.first_name || '';
+                        lastName = tg.initDataUnsafe.user.last_name || '';
                     }
                 }
             } catch (e) {
-                console.log("Telegram WebApp context missing.");
+                console.log("Telegram WebApp context error:", e);
             }
 
-            // 비상 방어 (챗아이디가 비어있을 경우)
+            // 2순위: 혹시 모를 URL 파라미터 체크
+            const currentParams = new URLSearchParams(window.location.search);
+            if (!chatId && currentParams.has('chat_id')) {
+                chatId = currentParams.get('chat_id');
+            }
+
+            // 3순위 (비상방어): 그래도 null이면 n8n 에러 방지용 임시 ID 할당
             if (!chatId) {
                 chatId = "123456789"; 
             }
 
             const data = {
                 action: "PIONEER_ORDER",
-                chat_id: chatId,          // <-- n8n 텔레그램 노드 에러 방어 핵심 필드
-                telegram_id: chatId,      // <-- 호환용 필드
+                chat_id: String(chatId),   // <-- 절대 null이 되지 않도록 문자열로 확실히 보장
+                telegram_id: String(chatId),
                 username: username,
                 first_name: firstName,
                 last_name: lastName,
@@ -430,6 +437,6 @@
                 isSubmitting = false;
             }
         }
-    </script>
+                   </script>
 </body>
 </html>
