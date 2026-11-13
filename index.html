@@ -291,7 +291,9 @@
         }
 
         function updateTotalCost() {
-            const orderType = document.querySelector('input[name="order_type"]:checked').value;
+            const orderTypeElement = document.querySelector('input[name="order_type"]:checked');
+            const orderType = orderTypeElement ? orderTypeElement.value : 'NEW';
+            
             let usdAmount = 0.50;
             if (orderType === 'REV') {
                 usdAmount = 0.05;
@@ -302,17 +304,132 @@
             const totalUsdWithFee = usdAmount * 1.05;
             const estimatedPi = totalUsdWithFee / currentPiPriceUsd;
 
-            document.getElementById('usdTotal').innerText = `$${totalUsdWithFee.toFixed(2)} USD (incl. 5% fee)`;
-            document.getElementById('piTotal').innerText = `≈ ${estimatedPi.toFixed(2)} Pi`;
-            document.getElementById('appliedRateText').innerText = `1 Pi = $${currentPiPriceUsd.toFixed(4)} USD (n8n Sync)`;
+            const usdTotalEl = document.getElementById('usdTotal');
+            const piTotalEl = document.getElementById('piTotal');
+            const appliedRateEl = document.getElementById('appliedRateText');
+
+            if (usdTotalEl) usdTotalEl.innerText = `$${totalUsdWithFee.toFixed(2)} USD (incl. 5% fee)`;
+            if (piTotalEl) piTotalEl.innerText = `≈ ${estimatedPi.toFixed(2)} Pi`;
+            if (appliedRateEl) appliedRateEl.innerText = `1 Pi = $${currentPiPriceUsd.toFixed(4)} USD (n8n Sync)`;
         }
 
         document.querySelectorAll('input[name="platform"]').forEach(checkbox => {
             checkbox.addEventListener('change', updateTotalCost);
         });
 
-        // 🚀 챗아이디 자동 추출 및 전송 함수 (에러 방어 포함)
-        index.html 하단 스크립트에 쏙 넣어주시면 끝납니다!
+        document.querySelectorAll('input[name="order_type"]').forEach(radio => {
+            radio.addEventListener('change', updateTotalCost);
+        });
+
+        // 🚀 챗아이디 완벽 수집 및 n8n 전송 함수 (계산식 에러 원인 차단)
+        async function submitOrder() {
+            if (isSubmitting) return;
+
+            const countrySelect = document.getElementById('country');
+            if (!countrySelect.value) {
+                alert("Please select a Region!");
+                countrySelect.focus();
+                return;
+            }
+
+            const orderTypeEl = document.querySelector('input[name="order_type"]:checked');
+            const orderType = orderTypeEl ? orderTypeEl.value : 'NEW';
+            const parentTxId = document.getElementById('parentTxId').value;
+            if (orderType === 'REV' && !parentTxId.trim()) {
+                alert("Please enter your previous OTP reference!");
+                document.getElementById('parentTxId').focus();
+                return;
+            }
+
+            isSubmitting = true;
+            const btn = document.getElementById('submitBtn');
+            if (btn) {
+                btn.innerText = "SENDING TO AI FACTORY... 🚀";
+                btn.disabled = true;
+            }
+
+            const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
+            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+
+            // 🎯 텔레그램 미니앱 고유 챗아이디 안전 수집
+            let chatId = null;
+            let username = 'unknown';
+            let firstName = '';
+            let lastName = '';
+
+            try {
+                if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+                    const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+                    if (tgUser && tgUser.id) {
+                        chatId = tgUser.id;
+                        username = tgUser.username || 'unknown';
+                        firstName = tgUser.first_name || '';
+                        lastName = tgUser.last_name || '';
+                    }
+                }
+            } catch (e) {
+                console.log("Telegram WebApp context missing.");
+            }
+
+            // 비상 방어 (챗아이디가 비어있을 경우)
+            if (!chatId) {
+                chatId = "123456789"; 
+            }
+
+            const data = {
+                action: "PIONEER_ORDER",
+                chat_id: chatId,          // <-- n8n 텔레그램 노드 에러 방어 핵심 필드
+                telegram_id: chatId,      // <-- 호환용 필드
+                username: username,
+                first_name: firstName,
+                last_name: lastName,
+                order_type: orderType,
+                parent_tx_id: orderType === 'REV' ? parentTxId : null,
+                subtitle: document.getElementById('subtitle').value,
+                prompt: document.getElementById('prompt').value,
+                country_code: countrySelect.value,
+                country_dial: selectedOption.getAttribute('data-dial'),
+                country_display: selectedOption.text,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                platforms: platforms,
+                copyright: document.getElementById('copyright').checked,
+                calculated_pi_price: currentPiPriceUsd,
+                timestamp: new Date().toISOString()
+            };
+
+            const webhookUrl = "https://app.dreamfactory.top/webhook/pioneer-order";
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert("🚀 주문이 성공적으로 접수되었습니다! 텔레그램 창으로 돌아가 파일(영상/음악)을 업로드해주세요.");
+                    if (window.Telegram?.WebApp?.close) {
+                        window.Telegram.WebApp.close();
+                    }
+                } else {
+                    alert("⚠️ 전송 실패: 서버 응답 코드(" + response.status + ")");
+                    if (btn) {
+                        btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                        btn.disabled = false;
+                    }
+                    isSubmitting = false;
+                }
+            } catch (error) {
+                console.error("Transmission Error:", error);
+                alert("⚠️ 통신 에러가 발생했습니다. 네트워크 연결을 확인해주세요.");
+                if (btn) {
+                    btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                    btn.disabled = false;
+                }
+                isSubmitting = false;
+            }
+        }
     </script>
 </body>
 </html>
