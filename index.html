@@ -251,7 +251,7 @@
                     </div>
                     <div class="pt-1.5 border-t border-gray-300 flex justify-between text-[9px] font-bold text-gray-600">
                         <span>APPLIED PI RATE:</span>
-                        <span id="appliedRateText" class="font-mono">1 Pi = $0.0751 USD (n8n Sync)</span>
+                        <span id="appliedRateText" class="font-mono">1 Pi = $0.0679 USD (Live n8n Sync)</span>
                     </div>
                 </div>
                 <button onclick="submitOrder()" id="submitBtn" class="w-full bg-black text-white font-black py-4 text-xs hover:bg-zinc-800 transition active:scale-95 uppercase tracking-widest border-2 border-black shadow-lg">
@@ -269,16 +269,65 @@
         }
 
         let isSubmitting = false;
-        let currentPiPriceUsd = 0.0751;
+        let currentPiPriceUsd = 0.0679; // 기본 실시간 폴백 시세
 
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('price')) {
-            const passedPrice = parseFloat(urlParams.get('price'));
-            if (!isNaN(passedPrice) && passedPrice > 0) {
-                currentPiPriceUsd = passedPrice;
+        // ⏱️ [실시간 시세 연동 및 10분 캐시 방어 로직]
+        async function fetchLivePiPrice() {
+            try {
+                // 1. URL 파라미터로 price가 넘어온 경우 우선 적용 (?price=0.067979)
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('price')) {
+                    const passedPrice = parseFloat(urlParams.get('price'));
+                    if (!isNaN(passedPrice) && passedPrice > 0) {
+                        currentPiPriceUsd = passedPrice;
+                        localStorage.setItem('cached_pi_price', currentPiPriceUsd);
+                        localStorage.setItem('cached_pi_time', Date.now());
+                        updateTotalCost();
+                        return;
+                    }
+                }
+
+                // 2. 브라우저 로컬 스토리지에서 최근 10분 이내 시세 캐시 확인
+                const savedPrice = localStorage.getItem('cached_pi_price');
+                const savedTime = localStorage.getItem('cached_pi_time');
+                const TEN_MINUTES = 10 * 60 * 1000;
+
+                if (savedPrice && savedTime && (Date.now() - parseInt(savedTime) < TEN_MINUTES)) {
+                    currentPiPriceUsd = parseFloat(savedPrice);
+                    updateTotalCost();
+                    return;
+                }
+
+                // 3. n8n 웹훅 또는 API를 통해 실시간 pi_usd_price 조회
+                // (n8n에서 위젯 데이터를 리턴해주는 엔드포인트 URL로 연결하세요)
+                const res = await fetch('https://app.dreamfactory.top/webhook/get-pi-price', {
+                    signal: AbortSignal.timeout(4000) // 4초 타임아웃 방어
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    // n8n의 Code 노드 출력이 pi_usd_price 필드이므로 이를 반영
+                    const livePrice = data.pi_usd_price || data.price;
+                    if (livePrice && !isNaN(parseFloat(livePrice))) {
+                        currentPiPriceUsd = parseFloat(livePrice);
+                        localStorage.setItem('cached_pi_price', currentPiPriceUsd);
+                        localStorage.setItem('cached_pi_time', Date.now());
+                    }
+                } else {
+                    throw new Error("API response failed");
+                }
+            } catch (e) {
+                console.log("⚠️ 실시간 시세 조회 실패, 최근 캐시 또는 기본값 유지:", currentPiPriceUsd);
+                const fallbackPrice = localStorage.getItem('cached_pi_price');
+                if (fallbackPrice) {
+                    currentPiPriceUsd = parseFloat(fallbackPrice);
+                }
             }
+            updateTotalCost();
         }
-        updateTotalCost();
+
+        // 페이지 로드 시 실시간 시세 연동 실행
+        fetchLivePiPrice();
 
         function toggleOrderType(type) {
             const revContainer = document.getElementById('revision-container');
@@ -310,7 +359,7 @@
 
             if (usdTotalEl) usdTotalEl.innerText = `$${totalUsdWithFee.toFixed(2)} USD (incl. 5% fee)`;
             if (piTotalEl) piTotalEl.innerText = `≈ ${estimatedPi.toFixed(2)} Pi`;
-            if (appliedRateEl) appliedRateEl.innerText = `1 Pi = $${currentPiPriceUsd.toFixed(4)} USD (n8n Sync)`;
+            if (appliedRateEl) appliedRateEl.innerText = `1 Pi = $${currentPiPriceUsd.toFixed(4)} USD (Live n8n Sync)`;
         }
 
         document.querySelectorAll('input[name="platform"]').forEach(checkbox => {
@@ -321,7 +370,7 @@
             radio.addEventListener('change', updateTotalCost);
         });
 
-        // 🚀 챗아이디 완벽 수집 및 n8n 전송 함수 (계산식 에러 원인 차단)
+        // 🚀 주문 접수 및 n8n 웹훅 전송 함수
         async function submitOrder() {
             if (isSubmitting) return;
 
@@ -351,14 +400,12 @@
             const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked')).map(p => p.value);
             const selectedOption = countrySelect.options[countrySelect.selectedIndex];
 
-            // 🎯 [핵심 완벽 방어] 텔레그램 웹앱 객체 및 URL 파라미터에서 챗아이디 추출
             let chatId = null;
             let username = 'unknown';
             let firstName = '';
             let lastName = '';
 
             try {
-                // 1순위: 공식 텔레그램 웹앱 객체
                 if (window.Telegram && window.Telegram.WebApp) {
                     const tg = window.Telegram.WebApp;
                     if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
@@ -372,20 +419,24 @@
                 console.log("Telegram WebApp context error:", e);
             }
 
-            // 2순위: 혹시 모를 URL 파라미터 체크
             const currentParams = new URLSearchParams(window.location.search);
             if (!chatId && currentParams.has('chat_id')) {
                 chatId = currentParams.get('chat_id');
             }
 
-            // 3순위 (비상방어): 그래도 null이면 n8n 에러 방지용 임시 ID 할당
-            if (!chatId) {
-                chatId = "123456789"; 
+            if (!chatId || String(chatId) === "123456789") {
+                alert("텔레그램 챗아이디를 확인할 수 없습니다!\n\n반드시 텔레그램 봇방에서 원본 영상을 먼저 전송한 후, 제공된 미니앱 링크를 통해 다시 접속해 주세요.");
+                isSubmitting = false;
+                if (btn) {
+                    btn.innerText = "[ SUBMIT & START AI FACTORY ]";
+                    btn.disabled = false;
+                }
+                return;
             }
 
             const data = {
                 action: "PIONEER_ORDER",
-                chat_id: String(chatId),   // <-- 절대 null이 되지 않도록 문자열로 확실히 보장
+                chat_id: String(chatId),
                 telegram_id: String(chatId),
                 username: username,
                 first_name: firstName,
@@ -437,6 +488,6 @@
                 isSubmitting = false;
             }
         }
-                   </script>
+    </script>
 </body>
 </html>
